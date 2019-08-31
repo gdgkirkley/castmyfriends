@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { signInWithGoogle, auth } from "../firebase/firebase.utils";
+import Error from "./Error";
 
 const SignInForm = styled.form`
   display: grid;
@@ -37,6 +38,7 @@ const SignInForm = styled.form`
 
 const Signin = () => {
   const [values, setValues] = useState({
+    displayName: "",
     email: "",
     password: "",
     err: "",
@@ -53,17 +55,30 @@ const Signin = () => {
   const handleSignIn = e => {
     e.preventDefault();
     auth
-      .signInWithEmailAndPassword(values.email, values.password)
+      .createUserWithEmailAndPassword(values.email, values.password)
       .catch(err => {
         setValues({
           ...values,
-          err: err.message,
+          err: `Shoot! ${err.message}`,
         });
       });
   };
 
+  const handleGoogleSignIn = () => {
+    signInWithGoogle();
+  };
+
   return (
     <SignInForm onSubmit={handleSignIn}>
+      <Error error={values.err} />
+      <input
+        type="text"
+        name="displayName"
+        value={values.displayName}
+        placeholder="Jane Smith"
+        onChange={handleChange}
+        required
+      />
       <input
         type="email"
         name="email"
@@ -80,13 +95,13 @@ const Signin = () => {
         onChange={handleChange}
         required
       />
-      <button>Sign In</button>
-      <button onClick={signInWithGoogle}>
+      <button type="submit">Sign Up</button>
+      <button onClick={handleGoogleSignIn}>
         <img
           src="https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg"
           alt="Google"
         />
-        Sign in with Google
+        Sign up with Google
       </button>
     </SignInForm>
   );

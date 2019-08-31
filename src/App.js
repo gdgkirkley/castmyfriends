@@ -76,7 +76,7 @@ const Head = styled.div`
   font-size: ${theme.fontSize.display};
   color: ${theme.primary5};
   text-align: center;
-  margin: 50px 0px;
+  margin: 40px 0px;
   & span {
     color: ${theme.accent5};
   }
