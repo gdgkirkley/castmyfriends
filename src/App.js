@@ -98,9 +98,13 @@ const GlobalStyle = createGlobalStyle`
     }
     a {
         text-decoration: none;
-        color: ${props => props.theme.black};
+        color: ${props => props.theme.primary5};
         &:hover{
         cursor: pointer;
+        color: ${props => props.theme.primary4};
+        }
+        &:visited {
+          color: ${props => props.theme.primary5};
         }
         &.btn {
           padding: 10px 20px;

@@ -5,6 +5,7 @@ import Error from "./Error";
 
 const AddShowForm = styled.form`
   display: grid;
+  background: ${props => (props.loading ? "grey" : "none")};
   & input,
   textarea {
     padding: 16px 24px;
@@ -32,12 +33,45 @@ const AddShowForm = styled.form`
   }
 `;
 
-const AddCharacterField = styled.fieldset`
+const AddCharacterField = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 1fr 1fr 1fr;
-  border: none;
-  padding: 0;
+  grid-template-columns: 1fr 1fr 0.2fr;
+  grid-gap: 16px;
+  border: 1px solid ${props => props.theme.primary1};
+  padding: 16px 24px;
+  margin-bottom: 16px;
+  & input,
+  textarea {
+    display: inline-flex;
+    width: 100%;
+    margin: 0;
+    min-height: 64px;
+    height: 100%;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    resize: vertical;
+  }
+  & legend {
+    background-color: ${props => props.theme.primary5};
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: ${props => props.theme.borderRadius};
+  }
+`;
+
+const AddedCharacters = styled.div`
+  display: grid;
+  border: 1px solid ${props => props.theme.primary1};
+  padding: 16px 24px;
+  margin-bottom: 16px;
+`;
+
+const Character = styled.div`
+  display: grid;
+  grid-gap: 24px;
+  grid-template-columns: 1fr 1fr 0.2fr;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 const AddShow = props => {
@@ -50,7 +84,9 @@ const AddShow = props => {
     name: "",
     charDescription: "",
     cast: [],
+    tags: [],
     error: "",
+    loading: false,
   });
 
   const handleChange = e => {
@@ -72,8 +108,33 @@ const AddShow = props => {
     });
   };
 
+  const handleRemoveCharacter = (e, name) => {
+    e.preventDefault();
+    const newChars = values.cast.filter(char => {
+      return char.name !== name;
+    });
+    setValues({
+      ...values,
+      cast: [...newChars],
+    });
+  };
+
+  const separateTags = tags => {
+    return tags.replace(" ", "").split(",");
+  };
+
+  const separateTitle = title => {
+    return title.split(" ");
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
+    setValues({
+      ...values,
+      loading: true,
+    });
+    const sepTags = separateTags(values.tags);
+    const titleSearch = separateTitle(values.title);
     const newShow = await firestore
       .collection("shows")
       .add({
@@ -82,6 +143,8 @@ const AddShow = props => {
         playwright: values.playwright,
         author: values.author,
         translator: values.translator,
+        tags: sepTags,
+        keywords: titleSearch,
         createdAt: new Date(),
         createdBy: props.user.id || 0,
       })
@@ -89,6 +152,7 @@ const AddShow = props => {
         setValues({
           ...values,
           error: err,
+          loading: false,
         });
       });
     if (newShow.id) {
@@ -99,10 +163,14 @@ const AddShow = props => {
           ...values.cast,
         });
     }
+    setValues({
+      ...values,
+      loading: false,
+    });
   };
 
   return (
-    <AddShowForm onSubmit={handleSubmit}>
+    <AddShowForm onSubmit={handleSubmit} loading={values.loading} method="post">
       <h2>Add a New Show</h2>
       <Error error={values.error} />
       <label htmlFor="title">Title</label>
@@ -150,6 +218,7 @@ const AddShow = props => {
         value={values.translator}
         onChange={handleChange}
       />
+      <legend>Add Characters</legend>
       <AddCharacterField>
         <input
           type="text"
@@ -167,22 +236,36 @@ const AddShow = props => {
           onChange={handleChange}
         />
         <button type="button" onClick={handleAddCharacter}>
-          Add Character
+          Add
         </button>
-        <div>
-          <h3>Added Characters</h3>
-          {values.cast.map((char, index) => {
-            return (
-              <div key={`${char.name}-${index}`}>
-                {char.name}
-                <br />
-                {char.description}
-              </div>
-            );
-          })}
-        </div>
       </AddCharacterField>
-      <button type="submit">Add Show</button>
+      <legend>Added Characters</legend>
+      <AddedCharacters>
+        {values.cast.map((char, index) => {
+          return (
+            <Character key={`${char.name}-${index}`}>
+              <p>{char.name}</p>
+              <p>{char.description}</p>
+              <button
+                type="button"
+                onClick={e => handleRemoveCharacter(e, char.name)}
+              >
+                X
+              </button>
+            </Character>
+          );
+        })}
+      </AddedCharacters>
+      <label htmlFor="tags">Show Tags</label>
+      <input
+        type="text"
+        placeholder="Add show tags, separated by a comma"
+        name="tags"
+        id="tags"
+        value={values.tags}
+        onChange={handleChange}
+      />
+      <button type="submit">Add{values.loading && "ing"} Show</button>
     </AddShowForm>
   );
 };

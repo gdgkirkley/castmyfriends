@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { firestore } from "../firebase/firebase.utils";
 
 const SearchForm = styled.form`
   display: grid;
@@ -21,7 +22,16 @@ const SearchForm = styled.form`
   }
 `;
 
-const Search = () => {
+const SearchField = styled.div`
+  display: flex;
+  & button {
+    background: ${props => props.theme.primary5};
+    color: white;
+    min-width: 64px;
+  }
+`;
+
+const Search = props => {
   const [search, setSearch] = useState("");
 
   const handleChange = e => {
@@ -31,11 +41,31 @@ const Search = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    firestore
+      .collection("shows")
+      .where("keywords", "array-contains", search)
+      .get()
+      .then(snapshot => {
+        const results = snapshot.docs.map(doc => {
+          const data = doc.data();
+          const id = doc.id;
+          return { ...data, id };
+        });
+        console.log(results);
+        return props.getResults(results, search);
+      });
   };
 
   return (
     <SearchForm onSubmit={handleSubmit}>
-      <input placeholder="Find a show" value={search} onChange={handleChange} />
+      <SearchField>
+        <input
+          placeholder="Find a show"
+          value={search}
+          onChange={handleChange}
+        />
+        <button type="submit">→</button>
+      </SearchField>
       <p>
         Don't see what you're looking for? <Link to="/addshow">Add a show</Link>
       </p>

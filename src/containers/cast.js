@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { auth, createUserProfileDoc } from "../firebase/firebase.utils";
 import styled from "styled-components";
-import Search from "../components/Search";
 import Signin from "../components/Signin";
 import Signup from "../components/Signup";
 import AddShow from "../components/AddShow";
 import Footer from "./footer";
+import SearchPage from "./find";
 
 const CastListContainer = styled.div`
   display: grid;
@@ -44,7 +44,7 @@ const Cast = () => {
   return (
     <CastListContainer>
       <Switch>
-        <Route exact path="/" component={Search} />
+        <Route exact path="/" component={SearchPage} />
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/signup" component={Signup} />
         <Route
