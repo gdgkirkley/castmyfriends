@@ -39,6 +39,7 @@ export const createUserProfileDoc = async (user, data) => {
       console.log(error.message);
     }
   }
+  console.log(userRef);
   return userRef;
 };
 

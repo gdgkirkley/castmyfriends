@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Search from "../components/Search";
 import Signin from "../components/Signin";
 import Signup from "../components/Signup";
+import AddShow from "../components/AddShow";
 import Footer from "./footer";
 
 const CastListContainer = styled.div`
@@ -20,13 +21,24 @@ const Cast = () => {
   });
 
   useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      const currentUser = createUserProfileDoc(user);
-      setValues({
-        ...values,
-        user: currentUser,
-      });
+    const unlisten = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const currentUser = await createUserProfileDoc(userAuth);
+        currentUser.onSnapshot(snapshot => {
+          setValues({
+            ...values,
+            user: {
+              id: snapshot.id,
+              ...snapshot.data(),
+            },
+          });
+        });
+      }
     });
+
+    return () => {
+      unlisten();
+    };
   }, []);
 
   return (
@@ -35,6 +47,11 @@ const Cast = () => {
         <Route exact path="/" component={Search} />
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/signup" component={Signup} />
+        <Route
+          exact
+          path="/addshow"
+          render={props => <AddShow {...props} user={values.user} />}
+        />
       </Switch>
       <Footer user={values.user} />
     </CastListContainer>

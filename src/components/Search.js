@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const SearchForm = styled.form`
-  display: flex;
+  display: grid;
   width: 100%;
   justify-content: center;
   & input {
@@ -35,6 +36,9 @@ const Search = () => {
   return (
     <SearchForm onSubmit={handleSubmit}>
       <input placeholder="Find a show" value={search} onChange={handleChange} />
+      <p>
+        Don't see what you're looking for? <Link to="/addshow">Add a show</Link>
+      </p>
     </SearchForm>
   );
 };
