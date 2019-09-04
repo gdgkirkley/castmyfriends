@@ -41,28 +41,67 @@ const Search = props => {
     setSearch(value);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     const lowerSearch = search.toLowerCase();
+    console.log(lowerSearch);
+    let results = [];
 
-    firestore
-      .collection("shows")
-      .where("keywords", "array-contains", lowerSearch)
-      .orderBy("title")
-      .limit(5)
-      .get()
-      .then(snapshot => {
-        const results = snapshot.docs.map(doc => {
-          const data = doc.data();
-          const id = doc.id;
-          return { ...data, id };
-        });
-        console.log(results);
-        return props.getResults(results, search);
-      })
-      .catch(err => {
-        setErr(err.message);
+    let result = await Promise.all([
+      firestore
+        .collection("shows")
+        .where("keywords", "array-contains", lowerSearch)
+        .orderBy("title")
+        .limit(5)
+        .get(),
+      firestore
+        .collection("shows")
+        .where("tags", "array-contains", lowerSearch)
+        .orderBy("title")
+        .limit(5)
+        .get(),
+    ]);
+    console.log(result);
+
+    result.map(query => {
+      return query.docs.map(doc => {
+        const data = doc.data();
+        const id = doc.id;
+        return results.push({ ...data, id });
       });
+    });
+    console.log(results);
+    const finalResult = Array.from(new Set(results.map(show => show.id))).map(
+      id => {
+        return {
+          id: id,
+          ...results.find(show => show.id === id),
+        };
+      }
+    );
+
+    props.getResults(finalResult, search);
+
+    console.log(finalResult);
+    // await keywordSearch.onSnapshot(snapshot => {
+    //   snapshot.docs.map(doc => {
+    //     const data = doc.data();
+    //     const id = doc.id;
+    //     return results.push({ ...data, id });
+    //   });
+    // });
+    // .then(snapshot => {
+    //   const results = snapshot.docs.map(doc => {
+    //     const data = doc.data();
+    //     const id = doc.id;
+    //     return { ...data, id };
+    //   });
+    //   console.log(results);
+    //   return props.getResults(results, search);
+    // })
+    // .catch(err => {
+    //   setErr(err.message);
+    // });
   };
 
   return (

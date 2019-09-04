@@ -16,6 +16,7 @@ const ShowStyles = styled.div`
     background: ${props => props.theme.primary5};
     border: none;
     border-radius: ${props => props.theme.borderRadius};
+    font-size: ${props => props.theme.fontSize.emphasis};
     &:hover {
       background: ${props => props.theme.primary4};
       cursor: pointer;
