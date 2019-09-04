@@ -7,7 +7,7 @@ import Signup from "../components/Signup";
 import AddShow from "../components/AddShow";
 import Footer from "./footer";
 import SearchPage from "./find";
-import CastShow from "./castshow";
+import Show from "./show";
 
 const CastListContainer = styled.div`
   display: grid;
@@ -26,13 +26,13 @@ const Cast = () => {
       if (userAuth) {
         const currentUser = await createUserProfileDoc(userAuth);
         currentUser.onSnapshot(snapshot => {
-          setValues({
+          setValues(values => ({
             ...values,
             user: {
               id: snapshot.id,
               ...snapshot.data(),
             },
-          });
+          }));
         });
       }
     });
@@ -53,7 +53,7 @@ const Cast = () => {
           path="/addshow"
           render={props => <AddShow {...props} user={values.user} />}
         />
-        <Route exact path="/show/:id" component={CastShow} />
+        <Route exact path="/show/:id" component={Show} />
       </Switch>
       <Footer user={values.user} />
     </CastListContainer>

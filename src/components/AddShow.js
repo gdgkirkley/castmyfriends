@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { firestore } from "../firebase/firebase.utils";
 import Error from "./Error";
@@ -87,6 +88,8 @@ const AddShow = props => {
     tags: [],
     error: "",
     loading: false,
+    redirect: false,
+    newShowId: "",
   });
 
   const handleChange = e => {
@@ -120,11 +123,17 @@ const AddShow = props => {
   };
 
   const separateTags = tags => {
-    return tags.replace(" ", "").split(",");
+    return tags
+      .toLowerCase()
+      .replace(" ", "")
+      .split(",");
   };
 
   const separateTitle = title => {
-    return title.split(" ").toLowerCase();
+    return title
+      .toLowerCase()
+      .replace(/[^a-zA-Z ]/g, "")
+      .split(" ");
   };
 
   const handleSubmit = async e => {
@@ -166,8 +175,14 @@ const AddShow = props => {
     setValues({
       ...values,
       loading: false,
+      redirect: true,
+      newShowId: newShow.id,
     });
   };
+
+  if (values.redirect) {
+    return <Redirect to={`show/${values.newShowId}`} />;
+  }
 
   return (
     <AddShowForm onSubmit={handleSubmit} loading={values.loading} method="post">
@@ -181,6 +196,7 @@ const AddShow = props => {
         id="title"
         value={values.title}
         onChange={handleChange}
+        required
       />
       <label htmlFor="description">Show Description</label>
       <input
@@ -190,6 +206,7 @@ const AddShow = props => {
         id="description"
         value={values.description}
         onChange={handleChange}
+        required
       />
       <label htmlFor="playwright">Playwright</label>
       <input
@@ -264,6 +281,7 @@ const AddShow = props => {
         id="tags"
         value={values.tags}
         onChange={handleChange}
+        required
       />
       <button type="submit">Add{values.loading && "ing"} Show</button>
     </AddShowForm>
