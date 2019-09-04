@@ -41,7 +41,7 @@ const CastShow = props => {
       });
     }
     getShow();
-  }, []);
+  }, [props.match.params.id]);
 
   return (
     <ShowStyles>

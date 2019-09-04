@@ -124,7 +124,7 @@ const AddShow = props => {
   };
 
   const separateTitle = title => {
-    return title.split(" ");
+    return title.split(" ").toLowerCase();
   };
 
   const handleSubmit = async e => {

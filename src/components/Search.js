@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
+import Error from "./Error";
 
 const SearchForm = styled.form`
   display: grid;
@@ -33,6 +34,7 @@ const SearchField = styled.div`
 
 const Search = props => {
   const [search, setSearch] = useState("");
+  const [err, setErr] = useState("");
 
   const handleChange = e => {
     const { value } = e.target;
@@ -41,9 +43,13 @@ const Search = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    const lowerSearch = search.toLowerCase();
+
     firestore
       .collection("shows")
-      .where("keywords", "array-contains", search)
+      .where("keywords", "array-contains", lowerSearch)
+      .orderBy("title")
+      .limit(5)
       .get()
       .then(snapshot => {
         const results = snapshot.docs.map(doc => {
@@ -53,11 +59,15 @@ const Search = props => {
         });
         console.log(results);
         return props.getResults(results, search);
+      })
+      .catch(err => {
+        setErr(err.message);
       });
   };
 
   return (
     <SearchForm onSubmit={handleSubmit}>
+      <Error error={err} />
       <SearchField>
         <input
           placeholder="Find a show"
