@@ -7,6 +7,7 @@ import Signup from "../components/Signup";
 import AddShow from "../components/AddShow";
 import Footer from "./footer";
 import SearchPage from "./find";
+import CastShow from "./castshow";
 
 const CastListContainer = styled.div`
   display: grid;
@@ -52,6 +53,7 @@ const Cast = () => {
           path="/addshow"
           render={props => <AddShow {...props} user={values.user} />}
         />
+        <Route exact path="/show/:id" component={CastShow} />
       </Switch>
       <Footer user={values.user} />
     </CastListContainer>

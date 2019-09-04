@@ -104,7 +104,7 @@ const GlobalStyle = createGlobalStyle`
         color: ${props => props.theme.primary4};
         }
         &:visited {
-          color: ${props => props.theme.primary5};
+          color: ${props => props.theme.primary5};  
         }
         &.btn {
           padding: 10px 20px;
