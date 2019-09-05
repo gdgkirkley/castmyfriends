@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
 import Error from "../components/Error";
 
@@ -92,10 +91,11 @@ const Show = props => {
           setErr(err.message);
         });
       show.onSnapshot(snapshot => {
-        setShow({
+        const activeShow = {
           id: snapshot.id,
           ...snapshot.data(),
-        });
+        };
+        setShow(activeShow);
         setLoading(false);
       });
     }
@@ -114,8 +114,6 @@ const Show = props => {
         )
           .then(res => res.json())
           .then(res => {
-            console.log(res);
-
             setWiki(res);
           })
           .catch(err => {
@@ -143,9 +141,9 @@ const Show = props => {
       <Title>{show.title}</Title>
       <h4>By {show.playwright}</h4>
       <p>{show.description}</p>
-      <Link to={`cast/${show.id}`}>
+      <div>
         <button type="button">Cast this Show!</button>
-      </Link>
+      </div>
       <h4>Characters</h4>
       {cast.length
         ? cast.map(char => {

@@ -60,9 +60,9 @@ const Search = props => {
         .orderBy("title")
         .limit(5)
         .get(),
-    ]);
-    console.log(result);
-
+    ]).catch(err => {
+      setErr(err.message);
+    });
     result.map(query => {
       return query.docs.map(doc => {
         const data = doc.data();
@@ -70,7 +70,6 @@ const Search = props => {
         return results.push({ ...data, id });
       });
     });
-    console.log(results);
     const finalResult = Array.from(new Set(results.map(show => show.id))).map(
       id => {
         return {
@@ -79,29 +78,7 @@ const Search = props => {
         };
       }
     );
-
     props.getResults(finalResult, search);
-
-    console.log(finalResult);
-    // await keywordSearch.onSnapshot(snapshot => {
-    //   snapshot.docs.map(doc => {
-    //     const data = doc.data();
-    //     const id = doc.id;
-    //     return results.push({ ...data, id });
-    //   });
-    // });
-    // .then(snapshot => {
-    //   const results = snapshot.docs.map(doc => {
-    //     const data = doc.data();
-    //     const id = doc.id;
-    //     return { ...data, id };
-    //   });
-    //   console.log(results);
-    //   return props.getResults(results, search);
-    // })
-    // .catch(err => {
-    //   setErr(err.message);
-    // });
   };
 
   return (
