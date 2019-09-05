@@ -44,7 +44,6 @@ const Search = props => {
   const handleSubmit = async e => {
     e.preventDefault();
     const lowerSearch = search.toLowerCase();
-    console.log(lowerSearch);
     let results = [];
 
     let result = await Promise.all([

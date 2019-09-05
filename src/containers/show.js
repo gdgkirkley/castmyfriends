@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
 import Error from "../components/Error";
 import CastList from "../components/CastList";
@@ -62,6 +63,7 @@ const Show = props => {
   const [wiki, setWiki] = useState({});
   const [casting, setCasting] = useState(false);
 
+  const { setActiveShow } = props;
   useEffect(() => {
     async function getShow() {
       setLoading(true);
@@ -71,8 +73,6 @@ const Show = props => {
         .catch(err => {
           setErr(err.message);
         });
-      console.log(show);
-
       const data = show.data();
       const id = show.id;
       setShow({ id, ...data });
@@ -81,6 +81,10 @@ const Show = props => {
     }
     getShow();
   }, [props.match.params.id]);
+
+  useEffect(() => {
+    setActiveShow(show);
+  }, [show]);
 
   useEffect(() => {
     if (show.title) {
@@ -178,6 +182,7 @@ const Show = props => {
           </WikiContent>
         </Wiki>
       ) : null}
+      <Link to={`/show/${show.id}/edit`}>Edit Show</Link>
     </ShowStyles>
   );
 };

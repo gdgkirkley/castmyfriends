@@ -1,95 +1,30 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import styled from "styled-components";
 import { firestore } from "../firebase/firebase.utils";
 import Error from "./Error";
+import {
+  AddShowForm,
+  AddCharacterField,
+  AddedCharacters,
+  Character,
+} from "./AddShow";
 
-export const AddShowForm = styled.form`
-  display: grid;
-  background: ${props => (props.loading ? "grey" : "none")};
-  & input,
-  textarea {
-    padding: 16px 24px;
-    margin-bottom: 24px;
-    font-size: ${props => props.theme.fontSize.reading};
-    border-radius: ${props => props.theme.borderRadius};
-    border: 1px solid ${props => props.theme.grey8};
-    &:hover {
-      border: 1px solid ${props => props.theme.primary7};
-    }
-  }
-  & label {
-    font-size: ${props => props.theme.fontSize.emphasis};
-    margin: 8px 0px;
-  }
-  & button {
-    background: ${props => props.theme.primary5};
-    color: white;
-    border: none;
-    padding: 16px 24px;
-    &:hover {
-      cursor: pointer;
-      background: ${props => props.theme.primary4};
-    }
-  }
-`;
-
-export const AddCharacterField = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 1fr 1fr 0.2fr;
-  grid-gap: 16px;
-  border: 1px solid ${props => props.theme.primary1};
-  padding: 16px 24px;
-  margin-bottom: 16px;
-  & input,
-  textarea {
-    display: inline-flex;
-    width: 100%;
-    margin: 0;
-    min-height: 64px;
-    height: 100%;
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
-    resize: vertical;
-  }
-  & legend {
-    background-color: ${props => props.theme.primary5};
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: ${props => props.theme.borderRadius};
-  }
-`;
-
-export const AddedCharacters = styled.div`
-  display: grid;
-  border: 1px solid ${props => props.theme.primary1};
-  padding: 16px 24px;
-  margin-bottom: 16px;
-`;
-
-export const Character = styled.div`
-  display: grid;
-  grid-gap: 24px;
-  grid-template-columns: 1fr 1fr 0.2fr;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const AddShow = props => {
+const EditShow = props => {
+  const { show } = props;
+  const loadedTags = show.tags && show.tags.toString();
   const [values, setValues] = useState({
-    title: "",
-    description: "",
-    playwright: "",
-    author: "",
-    translator: "",
+    title: show.title || "",
+    description: show.description || "",
+    playwright: show.playwright || "",
+    author: show.author || "",
+    translator: show.translator || "",
     name: "",
     charDescription: "",
-    cast: [],
-    tags: [],
+    cast: show.cast || [],
+    tags: loadedTags || [],
     error: "",
     loading: false,
     redirect: false,
-    newShowId: "",
   });
 
   const handleChange = e => {
@@ -144,9 +79,9 @@ const AddShow = props => {
     });
     const sepTags = separateTags(values.tags);
     const titleSearch = separateTitle(values.title);
-    const newShow = await firestore
-      .collection("shows")
-      .add({
+    await firestore
+      .doc(`shows/${show.id}`)
+      .update({
         title: values.title,
         description: values.description,
         playwright: values.playwright,
@@ -155,8 +90,6 @@ const AddShow = props => {
         tags: sepTags,
         keywords: titleSearch,
         cast: values.cast,
-        createdAt: new Date(),
-        createdBy: props.user.id || 0,
       })
       .catch(err => {
         setValues({
@@ -165,29 +98,20 @@ const AddShow = props => {
           loading: false,
         });
       });
-    // if (newShow.id) {
-    //   await firestore
-    //     .doc(`shows/${newShow.id}`)
-    //     .collection("cast")
-    //     .add({
-    //       ...values.cast,
-    //     });
-    // }
     setValues({
       ...values,
       loading: false,
       redirect: true,
-      newShowId: newShow.id,
     });
   };
 
   if (values.redirect) {
-    return <Redirect to={`show/${values.newShowId}`} />;
+    return <Redirect to={`show/${show.id}`} />;
   }
 
   return (
     <AddShowForm onSubmit={handleSubmit} loading={values.loading} method="post">
-      <h2>Add a New Show</h2>
+      <h2>Edit {values.title}</h2>
       <Error error={values.error} />
       <label htmlFor="title">Title</label>
       <input
@@ -289,4 +213,4 @@ const AddShow = props => {
   );
 };
 
-export default AddShow;
+export default EditShow;

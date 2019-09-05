@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Signin from "../components/Signin";
 import Signup from "../components/Signup";
 import AddShow from "../components/AddShow";
+import EditShow from "../components/EditShow";
 import Footer from "./footer";
 import SearchPage from "./find";
 import Show from "./show";
@@ -43,22 +44,36 @@ const Cast = () => {
     };
   }, []);
 
+  const setActiveShow = show => {
+    setValues({
+      ...values,
+      activeShow: show,
+    });
+  };
+
   return (
     <CastListContainer>
       <Switch>
-        <Route exact path="/" component={SearchPage} />
-        <Route exact path="/signin" component={Signin} />
-        <Route exact path="/signup" component={Signup} />
+        <Route path="/signin" component={Signin} />
+        <Route path="/signup" component={Signup} />
         <Route
-          exact
           path="/addshow"
           render={props => <AddShow {...props} user={values.user} />}
         />
         <Route
           exact
-          path="/show/:id"
-          render={props => <Show {...props} user={values.user} />}
+          path="/show/:id/edit"
+          render={props => (
+            <EditShow {...props} user={props.user} show={values.activeShow} />
+          )}
         />
+        <Route
+          path="/show/:id"
+          render={props => (
+            <Show {...props} user={values.user} setActiveShow={setActiveShow} />
+          )}
+        />
+        <Route exact path="/" component={SearchPage} />
       </Switch>
       <Footer user={values.user} />
     </CastListContainer>
