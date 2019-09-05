@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { firestore } from "../firebase/firebase.utils";
 import Error from "../components/Error";
+import CastList from "../components/CastList";
+import CastShow from "../components/CastShow";
 
 const ShowStyles = styled.div`
   display: grid;
@@ -25,21 +27,6 @@ const ShowStyles = styled.div`
 
 const Title = styled.div`
   font-size: ${props => props.theme.fontSize.title};
-`;
-
-const CastList = styled.div`
-  font-size: ${props => props.theme.fontSize.reading};
-  display: grid;
-  justify-content: center;
-  grid-template-columns: 1fr 1fr;
-  padding: 10px;
-  text-align: center;
-  & strong {
-    color: ${props => props.theme.primary1};
-  }
-  & span {
-    color: ${props => props.theme.accent5};
-  }
 `;
 
 const Wiki = styled.div`
@@ -73,6 +60,7 @@ const Show = props => {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const [wiki, setWiki] = useState({});
+  const [casting, setCasting] = useState(false);
 
   useEffect(() => {
     async function getShow() {
@@ -142,23 +130,16 @@ const Show = props => {
       <h4>By {show.playwright}</h4>
       <p>{show.description}</p>
       <div>
-        <button type="button">Cast this Show!</button>
+        <button type="button" onClick={() => setCasting(!casting)}>
+          Cast this Show!
+        </button>
       </div>
       <h4>Characters</h4>
-      {cast.length
-        ? cast.map(char => {
-            return (
-              <CastList key={char.name}>
-                <div>
-                  <strong>{char.name}</strong>
-                </div>
-                <div>
-                  <span>{char.description}</span>
-                </div>
-              </CastList>
-            );
-          })
-        : null}
+      {casting ? (
+        <CastShow cast={cast} show={show} />
+      ) : (
+        <CastList cast={cast} />
+      )}
       <h2>Learn More</h2>
       {wiki.title && wiki.title !== "Not found." ? (
         <Wiki>

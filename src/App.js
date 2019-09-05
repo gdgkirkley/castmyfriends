@@ -128,7 +128,7 @@ function App() {
       <StyledPage>
         <Inner>
           <Head>
-            Cast My <span>Friends</span>
+            Cast My <span>Show</span>
           </Head>
           <BrowserRouter>
             <Cast />
