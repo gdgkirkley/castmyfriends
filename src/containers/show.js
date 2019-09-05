@@ -65,27 +65,19 @@ const Show = props => {
   useEffect(() => {
     async function getShow() {
       setLoading(true);
-      const show = await firestore.doc(`shows/${props.match.params.id}`);
-      await firestore
+      const show = await firestore
         .doc(`shows/${props.match.params.id}`)
-        .collection("cast")
         .get()
-        .then(snapshot => {
-          snapshot.forEach(snap => {
-            setCast(Object.values(snap.data()));
-          });
-        })
         .catch(err => {
           setErr(err.message);
         });
-      show.onSnapshot(snapshot => {
-        const activeShow = {
-          id: snapshot.id,
-          ...snapshot.data(),
-        };
-        setShow(activeShow);
-        setLoading(false);
-      });
+      console.log(show);
+
+      const data = show.data();
+      const id = show.id;
+      setShow({ id, ...data });
+      setCast(data.cast || []);
+      setLoading(false);
     }
     getShow();
   }, [props.match.params.id]);

@@ -102,6 +102,7 @@ const CastShow = props => {
     return (characters = {
       ...characters,
       [char.name]: "",
+      castDescription: "",
     });
   });
 
@@ -202,6 +203,7 @@ const CastShow = props => {
 
   return (
     <div>
+      <h3>New Cast List</h3>
       <Instructions>
         Drag and drop to move an actor, or hold shift and drop to copy.
       </Instructions>

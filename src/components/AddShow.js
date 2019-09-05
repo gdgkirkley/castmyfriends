@@ -154,6 +154,7 @@ const AddShow = props => {
         translator: values.translator,
         tags: sepTags,
         keywords: titleSearch,
+        cast: values.cast,
         createdAt: new Date(),
         createdBy: props.user.id || 0,
       })
@@ -164,14 +165,14 @@ const AddShow = props => {
           loading: false,
         });
       });
-    if (newShow.id) {
-      await firestore
-        .doc(`shows/${newShow.id}`)
-        .collection("cast")
-        .add({
-          ...values.cast,
-        });
-    }
+    // if (newShow.id) {
+    //   await firestore
+    //     .doc(`shows/${newShow.id}`)
+    //     .collection("cast")
+    //     .add({
+    //       ...values.cast,
+    //     });
+    // }
     setValues({
       ...values,
       loading: false,
