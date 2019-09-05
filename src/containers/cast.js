@@ -54,7 +54,11 @@ const Cast = () => {
           path="/addshow"
           render={props => <AddShow {...props} user={values.user} />}
         />
-        <Route exact path="/show/:id" render={props => <Show {...props} />} />
+        <Route
+          exact
+          path="/show/:id"
+          render={props => <Show {...props} user={values.user} />}
+        />
       </Switch>
       <Footer user={values.user} />
     </CastListContainer>

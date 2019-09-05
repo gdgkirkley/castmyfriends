@@ -116,6 +116,10 @@ const Show = props => {
     return title.replace(" ", "_");
   };
 
+  const handleCasting = () => {
+    setCasting(!casting);
+  };
+
   if (loading) {
     return <ShowStyles>Loading...</ShowStyles>;
   }
@@ -130,13 +134,18 @@ const Show = props => {
       <h4>By {show.playwright}</h4>
       <p>{show.description}</p>
       <div>
-        <button type="button" onClick={() => setCasting(!casting)}>
-          Cast this Show!
+        <button type="button" onClick={handleCasting}>
+          {casting ? "Go Back" : "Cast this Show!"}
         </button>
       </div>
       <h4>Characters</h4>
       {casting ? (
-        <CastShow cast={cast} show={show} />
+        <CastShow
+          cast={cast}
+          show={show}
+          user={props.user}
+          handleCasting={handleCasting}
+        />
       ) : (
         <CastList cast={cast} />
       )}

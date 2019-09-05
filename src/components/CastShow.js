@@ -1,23 +1,27 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { firestore } from "../firebase/firebase.utils";
 
 const CastingForm = styled.form`
   display: grid;
   align-content: center;
   justify-content: center;
   grid-template-columns: 1fr 1fr;
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
   & fieldset {
     display: contents;
     border: none;
     margin: 0;
     padding: 0;
-    & label {
-      display: inline-flex;
-      font-weight: bold;
-    }
     & button {
       margin: 0;
       border-radius: 0px 4px 4px 0px;
+      &:disabled {
+        background: ${props => props.theme.grey5};
+        cursor: normal;
+      }
     }
   }
   & input {
@@ -31,11 +35,22 @@ const CastingForm = styled.form`
   }
 `;
 
+const Instructions = styled.p`
+  font-size: ${props => props.theme.fontSize.information};
+  color: ${props => props.theme.grey7};
+  margin-bottom: 32px;
+`;
+
 const CharacterCasting = styled.div`
   display: grid;
   align-items: start;
   justify-items: center;
   margin-bottom: 32px;
+  & label {
+    display: inline-flex;
+    font-weight: bold;
+    color: ${props => (props.cast ? props.theme.primary5 : props.theme.grey5)};
+  }
   & p {
     font-size: ${props => props.theme.fontSize.information};
     margin: 8px 0px;
@@ -45,7 +60,7 @@ const CharacterCasting = styled.div`
 
 const CastInput = styled.div`
   display: grid;
-  align-items: start;
+  align-items: stretch;
   grid-template-columns: 3fr 1fr;
 `;
 
@@ -70,18 +85,27 @@ const CastActors = styled.div`
     }
     &:hover {
       background: ${props => props.theme.primary4};
-      cursor: pointer;
+      cursor: grab;
       &:after {
         content: "x";
         display: inline-flex;
         margin-left: 8px;
+        cursor: pointer;
       }
     }
   }
 `;
 
 const CastShow = props => {
-  const [values, setValues] = useState({});
+  let characters = {};
+  props.cast.map(char => {
+    return (characters = {
+      ...characters,
+      [char.name]: "",
+    });
+  });
+
+  const [values, setValues] = useState(characters);
   const [cast, setCast] = useState({});
 
   const handleChange = e => {
@@ -116,14 +140,29 @@ const CastShow = props => {
     });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    const { show } = props;
+    await firestore.collection(`users/${props.user.id}/casts`).add({
+      id: show.id,
+      show: {
+        id: show.id,
+        title: show.title,
+        description: show.description,
+        playwright: show.playwright,
+        author: show.author,
+        translator: show.translator,
+      },
+      cast: cast,
+      created: new Date(),
+    });
+    props.handleCasting();
   };
 
-  const handleDragStart = (e, actor) => {
+  const handleDragStart = (e, actor, char) => {
     e.persist();
     e.dataTransfer.setData("value", actor);
-    console.log("Drag", e);
+    e.dataTransfer.setData("char", char);
   };
 
   const handleDragOver = e => {
@@ -133,33 +172,60 @@ const CastShow = props => {
 
   const handleDrop = (e, name) => {
     e.persist();
+
     const value = e.dataTransfer.getData("value");
     const newCast = cast[name] ? [...cast[name], value] : [value];
+
+    const oldChar = e.dataTransfer.getData("char");
+    let oldCast;
+    if (!e.shiftKey) {
+      oldCast = cast[oldChar].filter(char => {
+        return char !== value;
+      });
+    } else {
+      oldCast = cast[oldChar];
+    }
+
     setCast({
       ...cast,
       [name]: newCast,
+      [oldChar]: oldCast,
     });
+  };
+
+  const isCast = name => {
+    if (!cast[name]) return false;
+    if (cast[name].length) {
+      return true;
+    }
   };
 
   return (
     <div>
+      <Instructions>
+        Drag and drop to move an actor, or hold shift and drop to copy.
+      </Instructions>
       <CastingForm method="post" onSubmit={handleSubmit}>
         <fieldset>
           {props.cast.map(char => {
             return (
-              <CharacterCasting key={char.name}>
+              <CharacterCasting key={char.name} cast={isCast(char.name)}>
                 <label htmlFor={char.name}>{char.name}</label>
                 <p>{char.description}</p>
                 <CastInput>
                   <input
                     type="text"
-                    defaultValue={char.name}
                     value={values[char.name]}
                     onChange={handleChange}
                     name={char.name}
                     id={char.name}
                   />
-                  <button type="button" name={char.name} onClick={handleAdd}>
+                  <button
+                    type="button"
+                    name={char.name}
+                    onClick={handleAdd}
+                    disabled={!values[char.name]}
+                  >
                     +
                   </button>
                 </CastInput>
@@ -175,7 +241,9 @@ const CastShow = props => {
                           name={actor}
                           id={actor}
                           onClick={() => handleRemove(char.name, actor)}
-                          onDragStart={e => handleDragStart(e, actor)}
+                          onDragStart={e =>
+                            handleDragStart(e, actor, char.name)
+                          }
                           draggable
                         >
                           {actor}
