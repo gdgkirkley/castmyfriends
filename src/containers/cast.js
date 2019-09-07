@@ -9,6 +9,7 @@ import EditShow from "../components/EditShow";
 import Footer from "./footer";
 import SearchPage from "./find";
 import Show from "./show";
+import Profile from "./profile";
 
 const CastListContainer = styled.div`
   display: grid;
@@ -72,6 +73,10 @@ const Cast = () => {
           render={props => (
             <Show {...props} user={values.user} setActiveShow={setActiveShow} />
           )}
+        />
+        <Route
+          path="/profile"
+          render={props => <Profile {...props} user={values.user} />}
         />
         <Route exact path="/" component={SearchPage} />
       </Switch>

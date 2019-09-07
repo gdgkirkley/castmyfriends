@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
 import Error from "./Error";
@@ -26,6 +26,32 @@ const EditShow = props => {
     loading: false,
     redirect: false,
   });
+
+  useEffect(() => {
+    if (!show.title) {
+      async function getShow() {
+        const show = await firestore
+          .doc(`shows/${props.match.params.id}`)
+          .get()
+          .catch(err => {
+            setValues(values => ({
+              ...values,
+              err,
+            }));
+          });
+        const data = show.data();
+        const id = show.id;
+        const loadTags = data.tags.toString();
+        setValues(values => ({
+          ...values,
+          id,
+          ...data,
+          tags: loadTags,
+        }));
+      }
+      getShow();
+    }
+  }, [show.title, props.match.params.id]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -110,7 +136,7 @@ const EditShow = props => {
   }
 
   return (
-    <AddShowForm onSubmit={handleSubmit} loading={values.loading} method="post">
+    <AddShowForm onSubmit={handleSubmit} method="post">
       <h2>Edit {values.title}</h2>
       <Error error={values.error} />
       <label htmlFor="title">Title</label>
@@ -208,7 +234,7 @@ const EditShow = props => {
         onChange={handleChange}
         required
       />
-      <button type="submit">Add{values.loading && "ing"} Show</button>
+      <button type="submit">Updat{values.loading ? "ing" : "e"} Show</button>
     </AddShowForm>
   );
 };
