@@ -288,7 +288,9 @@ const Show = props => {
           </WikiContent>
         </Wiki>
       ) : null}
-      <Link to={`/show/${show.id}/edit`}>Edit Show</Link>
+      <p>
+        <Link to={`/show/${show.id}/edit`}>Edit Show</Link>
+      </p>
     </ShowStyles>
   );
 };

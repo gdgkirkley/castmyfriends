@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 
 const SearchResults = props => {
   const { results } = props;
+  if (!results.length) return null;
   return (
     <div>
       {!results.length &&
         props.search.searched &&
         `Nothing found for "${props.search.term}"...`}
-      {results.length ? <h2>Search Results</h2> : null}
+      {results.length ? <h2>Search Results ({results.length})</h2> : null}
       {results.map((show, index) => {
         return (
           <p key={show.id}>

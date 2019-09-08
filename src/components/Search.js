@@ -62,7 +62,7 @@ const Search = props => {
         .collection("shows")
         .where("keywords", "array-contains", lowerSearch)
         .orderBy("title")
-        .limit(5)
+        .limit(50)
         .get(),
       firestore
         .collection("shows")
