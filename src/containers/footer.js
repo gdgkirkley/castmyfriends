@@ -13,7 +13,7 @@ const FooterStyles = styled.div`
 
 const FooterNav = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
   & button {
     border: none;
@@ -38,6 +38,7 @@ const Footer = props => {
         {user && user.email ? (
           <>
             <Link to="/addshow">Add a Show</Link>
+            <Link to="/profile">My Casts</Link>
             <button onClick={() => auth.signOut()}>Sign Out</button>
           </>
         ) : (

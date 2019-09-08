@@ -5,6 +5,7 @@ import { firestore } from "../firebase/firebase.utils";
 import Error from "../components/Error";
 import CastList from "../components/CastList";
 import CastShow from "../components/CastShow";
+import { formatDate } from "../lib/helpers";
 
 const ShowStyles = styled.div`
   display: grid;
@@ -62,6 +63,7 @@ const Show = props => {
   const [loading, setLoading] = useState(false);
   const [wiki, setWiki] = useState({});
   const [casting, setCasting] = useState(false);
+  const [userCasts, setUserCasts] = useState({});
 
   const { setActiveShow } = props;
   useEffect(() => {
@@ -85,6 +87,23 @@ const Show = props => {
   useEffect(() => {
     setActiveShow(show);
   }, [show]);
+
+  useEffect(() => {
+    if (!props.user) return;
+
+    async function getCasts() {
+      const castRef = await firestore
+        .collection(`users/${props.user.id}/casts`)
+        .where("show.id", "==", props.match.params.id)
+        .get();
+      castRef.docs.map(doc => {
+        const data = doc.data();
+        const id = doc.id;
+        setUserCasts({ ...data, id });
+      });
+    }
+    getCasts();
+  }, [props.user]);
 
   useEffect(() => {
     if (show.title) {
@@ -130,11 +149,15 @@ const Show = props => {
       <h4>By {show.playwright}</h4>
       <p>{show.description}</p>
       <div>
+        {userCasts.id && <button type="button">My Cast Lists</button>}
         <button type="button" onClick={handleCasting}>
-          {casting ? "Go Back" : "Cast this Show!"}
+          {casting ? "Go Back" : "Cast This Show!"}
         </button>
       </div>
       <h4>Characters</h4>
+      {userCasts.id && (
+        <p>Viewing cast created on {formatDate(userCasts.created.toDate())}</p>
+      )}
       {casting ? (
         <CastShow
           cast={cast}
@@ -143,7 +166,7 @@ const Show = props => {
           handleCasting={handleCasting}
         />
       ) : (
-        <CastList cast={cast} />
+        <CastList cast={cast} castList={userCasts} />
       )}
       <h2>Learn More</h2>
       {wiki.title && wiki.title !== "Not found." ? (

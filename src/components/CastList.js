@@ -4,8 +4,9 @@ import styled from "styled-components";
 const CastListStyles = styled.div`
   font-size: ${props => props.theme.fontSize.reading};
   display: grid;
-  justify-content: center;
-  grid-template-columns: 1fr 1fr;
+  justify-content: space-around;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
   padding: 10px;
   text-align: center;
   & strong {
@@ -30,6 +31,17 @@ const CastList = props => {
                 <div>
                   <span>{char.description}</span>
                 </div>
+                {props.castList.id ? (
+                  <div>
+                    <strong>
+                      {props.castList.cast[char.name].map((el, index) => {
+                        if (index !== props.castList.cast[char.name].length - 1)
+                          return el + ", ";
+                        return el;
+                      })}
+                    </strong>
+                  </div>
+                ) : null}
               </CastListStyles>
             );
           })

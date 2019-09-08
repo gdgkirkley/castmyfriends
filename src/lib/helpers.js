@@ -5,3 +5,19 @@ export const titleCase = str => {
   });
   return final.join(" ");
 };
+
+export const formatDate = (date, dateObj, type) => {
+  if (!dateObj) {
+    dateObj = {
+      timeZone: "UTC",
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+  }
+  if (!type) {
+    type = "en-US";
+  }
+  return new Date(date).toLocaleDateString(type, dateObj);
+};

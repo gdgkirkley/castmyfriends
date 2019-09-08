@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
-import { get } from "http";
+import { formatDate } from "../lib/helpers";
 
 const Profile = props => {
-  const [casts, setCasts] = useState({});
+  const [casts, setCasts] = useState([]);
   useEffect(() => {
     if (!props.user) return;
 
@@ -11,11 +12,14 @@ const Profile = props => {
       const castRef = await firestore
         .collection(`users/${props.user.id}/casts`)
         .get();
+      const newUserCasts = [];
       castRef.docs.map(doc => {
         const data = doc.data();
         const id = doc.id;
-        setCasts({ ...data, id });
+        const newCast = { ...data, id };
+        return newUserCasts.push(newCast);
       });
+      setCasts(newUserCasts);
     }
     getCasts();
   }, [props.user]);
@@ -23,7 +27,26 @@ const Profile = props => {
   return (
     <div>
       <p>You have casts for:</p>
-      <p>{casts.id && casts.show.title}</p>
+      {casts.length
+        ? casts.map(cast => {
+            return (
+              <div key={cast.id}>
+                <Link to={`/show/${cast.show.id}`}>{cast.show.title}</Link>
+                <p>
+                  Created on{" "}
+                  {formatDate(cast.created.toDate(), {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}
+                </p>
+              </div>
+            );
+          })
+        : null}
     </div>
   );
 };
