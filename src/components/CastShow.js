@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { firestore } from "../firebase/firebase.utils";
 
@@ -107,7 +107,11 @@ const CastShow = props => {
   });
 
   const [values, setValues] = useState(characters);
-  const [cast, setCast] = useState({});
+  const [cast, setCast] = useState(props.castList ? props.castList.cast : {});
+
+  useEffect(() => {
+    setCast(props.castList.cast);
+  }, [props.castList]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -144,6 +148,15 @@ const CastShow = props => {
   const handleSubmit = async e => {
     e.preventDefault();
     const { show } = props;
+    if (props.castList) {
+      await firestore
+        .doc(`users/${props.user.id}/casts/${props.castList.id}`)
+        .update({
+          cast: cast,
+          lastUpdate: new Date(),
+        });
+      return props.handleCasting();
+    }
     await firestore.collection(`users/${props.user.id}/casts`).add({
       id: show.id,
       show: {
@@ -203,7 +216,7 @@ const CastShow = props => {
 
   return (
     <div>
-      <h3>New Cast List</h3>
+      <h3>{props.castList ? "Edit" : "New"} Cast List</h3>
       <Instructions>
         Drag and drop to move an actor, or hold shift and drop to copy.
       </Instructions>

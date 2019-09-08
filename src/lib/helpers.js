@@ -9,7 +9,6 @@ export const titleCase = str => {
 export const formatDate = (date, dateObj, type) => {
   if (!dateObj) {
     dateObj = {
-      timeZone: "UTC",
       weekday: "long",
       day: "numeric",
       month: "long",

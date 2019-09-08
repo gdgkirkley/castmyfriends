@@ -18,7 +18,12 @@ const CastListStyles = styled.div`
 `;
 
 const CastList = props => {
-  const { cast } = props;
+  const {
+    cast,
+    viewing: { viewing, index },
+    castList,
+  } = props;
+
   return (
     <>
       {cast.length
@@ -31,11 +36,11 @@ const CastList = props => {
                 <div>
                   <span>{char.description}</span>
                 </div>
-                {props.castList.id ? (
+                {viewing && castList.length ? (
                   <div>
                     <strong>
-                      {props.castList.cast[char.name].map((el, index) => {
-                        if (index !== props.castList.cast[char.name].length - 1)
+                      {castList[index].cast[char.name].map((el, i) => {
+                        if (i !== castList[index].cast[char.name].length - 1)
                           return el + ", ";
                         return el;
                       })}

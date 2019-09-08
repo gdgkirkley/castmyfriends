@@ -64,6 +64,10 @@ const Show = props => {
   const [wiki, setWiki] = useState({});
   const [casting, setCasting] = useState(false);
   const [userCasts, setUserCasts] = useState({});
+  const [viewingCasts, setViewingCasts] = useState({
+    viewing: false,
+    index: 0,
+  });
 
   const { setActiveShow } = props;
   useEffect(() => {
@@ -96,14 +100,17 @@ const Show = props => {
         .collection(`users/${props.user.id}/casts`)
         .where("show.id", "==", props.match.params.id)
         .get();
+      const newUserCasts = [];
       castRef.docs.map(doc => {
         const data = doc.data();
         const id = doc.id;
-        setUserCasts({ ...data, id });
+        const newCast = { ...data, id };
+        return newUserCasts.push(newCast);
       });
+      setUserCasts(newUserCasts);
     }
     getCasts();
-  }, [props.user]);
+  }, [props.user, props.match.params.id]);
 
   useEffect(() => {
     if (show.title) {
@@ -133,6 +140,28 @@ const Show = props => {
 
   const handleCasting = () => {
     setCasting(!casting);
+    setViewingCasts({
+      viewing: false,
+      index: viewingCasts.index,
+    });
+  };
+
+  const handleViewingCasts = () => {
+    setViewingCasts({
+      viewing: !viewingCasts.viewing,
+      index: viewingCasts.index,
+    });
+  };
+
+  const handleCastListChange = e => {
+    setViewingCasts({
+      viewing: true,
+      index: e.target.value,
+    });
+  };
+
+  const handleCastListEdit = () => {
+    setCasting(!casting);
   };
 
   if (loading) {
@@ -149,14 +178,42 @@ const Show = props => {
       <h4>By {show.playwright}</h4>
       <p>{show.description}</p>
       <div>
-        {userCasts.id && <button type="button">My Cast Lists</button>}
-        <button type="button" onClick={handleCasting}>
-          {casting ? "Go Back" : "Cast This Show!"}
-        </button>
+        {!casting && userCasts.length && (
+          <button type="button" onClick={handleViewingCasts}>
+            {viewingCasts.viewing ? "Go Back" : "My Cast Lists"}
+          </button>
+        )}
+        {viewingCasts.viewing ? (
+          <button type="button" onClick={handleCastListEdit}>
+            {casting ? "Go Back" : "Edit Cast"}
+          </button>
+        ) : (
+          <button type="button" onClick={handleCasting}>
+            {casting ? "Go Back" : "Cast This Show!"}
+          </button>
+        )}
       </div>
       <h4>Characters</h4>
-      {userCasts.id && (
-        <p>Viewing cast created on {formatDate(userCasts.created.toDate())}</p>
+      {viewingCasts.viewing && userCasts.length && (
+        <p>
+          Viewing cast created on{" "}
+          <select onChange={handleCastListChange}>
+            {userCasts.map((cast, index) => {
+              return (
+                <option value={index} key={cast.id}>
+                  {formatDate(cast.created.toDate(), {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}
+                </option>
+              );
+            })}
+          </select>
+        </p>
       )}
       {casting ? (
         <CastShow
@@ -164,9 +221,12 @@ const Show = props => {
           show={show}
           user={props.user}
           handleCasting={handleCasting}
+          castList={viewingCasts.viewing && userCasts[viewingCasts.index]}
         />
       ) : (
-        <CastList cast={cast} castList={userCasts} />
+        <>
+          <CastList cast={cast} castList={userCasts} viewing={viewingCasts} />
+        </>
       )}
       <h2>Learn More</h2>
       {wiki.title && wiki.title !== "Not found." ? (
