@@ -8,10 +8,11 @@ const SearchForm = styled.form`
   display: grid;
   width: 100%;
   justify-content: center;
+  text-align: center;
   & input {
     width: 100%;
     padding: 16px 24px;
-    border-radius: ${props => props.theme.borderRadius};
+    border-radius: 4px 0px 0px 4px;
     border: 1px solid ${props => props.theme.grey8};
     transition: 0.4s linear;
     font-size: ${props => props.theme.fontSize.reading};
@@ -25,11 +26,21 @@ const SearchForm = styled.form`
 
 const SearchField = styled.div`
   display: flex;
+  width: 100%;
   & button {
     background: ${props => props.theme.primary5};
     color: white;
     min-width: 64px;
+    border-radius: 0px 4px 4px 0px;
+    &:hover {
+      cursor: pointer;
+      background: ${props => props.theme.primary4};
+    }
   }
+`;
+
+const BottomText = styled.p`
+  font-size: ${props => props.theme.fontSize.information};
 `;
 
 const Search = props => {
@@ -85,15 +96,15 @@ const Search = props => {
       <Error error={err} />
       <SearchField>
         <input
-          placeholder="Find a show"
+          placeholder="Find a show by keyword"
           value={search}
           onChange={handleChange}
         />
         <button type="submit">→</button>
       </SearchField>
-      <p>
+      <BottomText>
         Don't see what you're looking for? <Link to="/addshow">Add a show</Link>
-      </p>
+      </BottomText>
     </SearchForm>
   );
 };

@@ -20,7 +20,7 @@ const CastingForm = styled.form`
       border-radius: 0px 4px 4px 0px;
       &:disabled {
         background: ${props => props.theme.grey5};
-        cursor: normal;
+        cursor: auto;
       }
     }
   }
@@ -96,6 +96,10 @@ const CastActors = styled.div`
   }
 `;
 
+const SaveButton = styled.button`
+  grid-column: 1/3;
+`;
+
 const CastShow = props => {
   let characters = {};
   props.cast.map(char => {
@@ -141,6 +145,11 @@ const CastShow = props => {
     const filteredCast = cast[name].filter(char => {
       return char !== actor;
     });
+    if (!filteredCast.length) {
+      const newCast = { ...cast };
+      delete newCast[name];
+      return setCast(newCast);
+    }
     setCast({
       ...cast,
       [name]: filteredCast,
@@ -272,8 +281,10 @@ const CastShow = props => {
                 </CharacterCasting>
               );
             })}
+          <SaveButton type="submit" disabled={!Object.keys(cast).length}>
+            Save Cast
+          </SaveButton>
         </fieldset>
-        <button type="submit">Save Cast</button>
       </CastingForm>
     </div>
   );

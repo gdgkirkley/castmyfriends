@@ -160,6 +160,27 @@ const Show = props => {
     setCasting(!casting);
   };
 
+  const handleCastListDelete = async () => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      await firestore
+        .doc(
+          `/users/${props.user.id}/casts/${userCasts[viewingCasts.index].id}`
+        )
+        .delete()
+        .then(() => {
+          getCasts();
+          setViewingCasts({
+            viewing: false,
+            index: 0,
+          });
+          alert("Successfully deleted");
+        })
+        .catch(err => {
+          setErr(err.message);
+        });
+    }
+  };
+
   if (loading) {
     return <ShowStyles>Loading...</ShowStyles>;
   }
@@ -174,15 +195,20 @@ const Show = props => {
       <h4>By {show.playwright}</h4>
       <p>{show.description}</p>
       <div>
-        {!casting && userCasts.length && (
+        {!casting && userCasts.length ? (
           <button type="button" onClick={handleViewingCasts}>
             {viewingCasts.viewing ? "Go Back" : "My Cast Lists"}
           </button>
-        )}
+        ) : null}
         {viewingCasts.viewing ? (
-          <button type="button" onClick={handleCastListEdit}>
-            {casting ? "Go Back" : "Edit Cast"}
-          </button>
+          <>
+            <button type="button" onClick={handleCastListEdit}>
+              {casting ? "Go Back" : "Edit Cast"}
+            </button>
+            <button type="button" onClick={handleCastListDelete}>
+              Delete Cast
+            </button>
+          </>
         ) : (
           <button type="button" onClick={handleCasting}>
             {casting ? "Go Back" : "Cast This Show!"}
