@@ -107,10 +107,12 @@ const CastShow = props => {
   });
 
   const [values, setValues] = useState(characters);
-  const [cast, setCast] = useState(props.castList ? props.castList.cast : {});
+  const [cast, setCast] = useState({});
 
   useEffect(() => {
-    setCast(props.castList.cast);
+    if (props.castList.id) {
+      setCast(props.castList.cast);
+    }
   }, [props.castList]);
 
   const handleChange = e => {
@@ -155,6 +157,7 @@ const CastShow = props => {
           cast: cast,
           lastUpdate: new Date(),
         });
+      props.getCasts();
       return props.handleCasting();
     }
     await firestore.collection(`users/${props.user.id}/casts`).add({
@@ -170,6 +173,7 @@ const CastShow = props => {
       cast: cast,
       created: new Date(),
     });
+    props.getCasts();
     props.handleCasting();
   };
 
@@ -208,10 +212,8 @@ const CastShow = props => {
   };
 
   const isCast = name => {
-    if (!cast[name]) return false;
-    if (cast[name].length) {
-      return true;
-    }
+    if (!cast[name] || !cast[name].length) return false;
+    return true;
   };
 
   return (
@@ -222,53 +224,54 @@ const CastShow = props => {
       </Instructions>
       <CastingForm method="post" onSubmit={handleSubmit}>
         <fieldset>
-          {props.cast.map(char => {
-            return (
-              <CharacterCasting key={char.name} cast={isCast(char.name)}>
-                <label htmlFor={char.name}>{char.name}</label>
-                <p>{char.description}</p>
-                <CastInput>
-                  <input
-                    type="text"
-                    value={values[char.name]}
-                    onChange={handleChange}
-                    name={char.name}
-                    id={char.name}
-                  />
-                  <button
-                    type="button"
-                    name={char.name}
-                    onClick={handleAdd}
-                    disabled={!values[char.name]}
+          {props.cast &&
+            props.cast.map(char => {
+              return (
+                <CharacterCasting key={char.name} cast={isCast(char.name)}>
+                  <label htmlFor={char.name}>{char.name}</label>
+                  <p>{char.description}</p>
+                  <CastInput>
+                    <input
+                      type="text"
+                      value={values[char.name]}
+                      onChange={handleChange}
+                      name={char.name}
+                      id={char.name}
+                    />
+                    <button
+                      type="button"
+                      name={char.name}
+                      onClick={handleAdd}
+                      disabled={!values[char.name]}
+                    >
+                      +
+                    </button>
+                  </CastInput>
+                  <CastActors
+                    onDrop={e => handleDrop(e, char.name)}
+                    onDragOver={handleDragOver}
                   >
-                    +
-                  </button>
-                </CastInput>
-                <CastActors
-                  onDrop={e => handleDrop(e, char.name)}
-                  onDragOver={handleDragOver}
-                >
-                  {cast[char.name] &&
-                    cast[char.name].map(actor => {
-                      return (
-                        <p
-                          key={actor}
-                          name={actor}
-                          id={actor}
-                          onClick={() => handleRemove(char.name, actor)}
-                          onDragStart={e =>
-                            handleDragStart(e, actor, char.name)
-                          }
-                          draggable
-                        >
-                          {actor}
-                        </p>
-                      );
-                    })}
-                </CastActors>
-              </CharacterCasting>
-            );
-          })}
+                    {cast[char.name] &&
+                      cast[char.name].map(actor => {
+                        return (
+                          <p
+                            key={actor}
+                            name={actor}
+                            id={actor}
+                            onClick={() => handleRemove(char.name, actor)}
+                            onDragStart={e =>
+                              handleDragStart(e, actor, char.name)
+                            }
+                            draggable
+                          >
+                            {actor}
+                          </p>
+                        );
+                      })}
+                  </CastActors>
+                </CharacterCasting>
+              );
+            })}
         </fieldset>
         <button type="submit">Save Cast</button>
       </CastingForm>

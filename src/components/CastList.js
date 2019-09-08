@@ -39,11 +39,7 @@ const CastList = props => {
                 {viewing && castList.length ? (
                   <div>
                     <strong>
-                      {castList[index].cast[char.name].map((el, i) => {
-                        if (i !== castList[index].cast[char.name].length - 1)
-                          return el + ", ";
-                        return el;
-                      })}
+                      {castList[index].cast[char.name].join(", ")}
                     </strong>
                   </div>
                 ) : null}

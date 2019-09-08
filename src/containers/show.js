@@ -94,23 +94,23 @@ const Show = props => {
 
   useEffect(() => {
     if (!props.user) return;
-
-    async function getCasts() {
-      const castRef = await firestore
-        .collection(`users/${props.user.id}/casts`)
-        .where("show.id", "==", props.match.params.id)
-        .get();
-      const newUserCasts = [];
-      castRef.docs.map(doc => {
-        const data = doc.data();
-        const id = doc.id;
-        const newCast = { ...data, id };
-        return newUserCasts.push(newCast);
-      });
-      setUserCasts(newUserCasts);
-    }
     getCasts();
   }, [props.user, props.match.params.id]);
+
+  const getCasts = async () => {
+    const castRef = await firestore
+      .collection(`users/${props.user.id}/casts`)
+      .where("show.id", "==", props.match.params.id)
+      .get();
+    const newUserCasts = [];
+    castRef.docs.map(doc => {
+      const data = doc.data();
+      const id = doc.id;
+      const newCast = { ...data, id };
+      return newUserCasts.push(newCast);
+    });
+    setUserCasts(newUserCasts);
+  };
 
   useEffect(() => {
     if (show.title) {
@@ -140,10 +140,6 @@ const Show = props => {
 
   const handleCasting = () => {
     setCasting(!casting);
-    setViewingCasts({
-      viewing: false,
-      index: viewingCasts.index,
-    });
   };
 
   const handleViewingCasts = () => {
@@ -221,6 +217,7 @@ const Show = props => {
           show={show}
           user={props.user}
           handleCasting={handleCasting}
+          getCasts={getCasts}
           castList={viewingCasts.viewing && userCasts[viewingCasts.index]}
         />
       ) : (
