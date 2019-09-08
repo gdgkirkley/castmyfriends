@@ -30,8 +30,8 @@ const Footer = props => {
   return (
     <FooterStyles>
       <p>
-        Hi{props.user && " " + props.user.displayName}! Cast My Friends is an
-        app that lets you cast your friends in your favourite shows!
+        Hi{props.user && " " + props.user.displayName}! Cast My Show is an app
+        that lets you cast your friends in your favourite shows!
       </p>
       <FooterNav>
         <Link to="/">Find a Show</Link>

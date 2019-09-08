@@ -105,6 +105,7 @@ const EditShow = props => {
     });
     const sepTags = separateTags(values.tags);
     const titleSearch = separateTitle(values.title);
+    const keywords = titleSearch.concat(sepTags);
     await firestore
       .doc(`shows/${show.id}`)
       .update({
@@ -114,7 +115,7 @@ const EditShow = props => {
         author: values.author,
         translator: values.translator,
         tags: sepTags,
-        keywords: titleSearch,
+        keywords: keywords,
         cast: values.cast,
       })
       .catch(err => {

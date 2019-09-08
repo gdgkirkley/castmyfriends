@@ -144,6 +144,7 @@ const AddShow = props => {
     });
     const sepTags = separateTags(values.tags);
     const titleSearch = separateTitle(values.title);
+    const keywords = titleSearch.concat(sepTags);
     const newShow = await firestore
       .collection("shows")
       .add({
@@ -153,7 +154,7 @@ const AddShow = props => {
         author: values.author,
         translator: values.translator,
         tags: sepTags,
-        keywords: titleSearch,
+        keywords: keywords,
         cast: values.cast,
         createdAt: new Date(),
         createdBy: props.user.id || 0,
@@ -165,14 +166,6 @@ const AddShow = props => {
           loading: false,
         });
       });
-    // if (newShow.id) {
-    //   await firestore
-    //     .doc(`shows/${newShow.id}`)
-    //     .collection("cast")
-    //     .add({
-    //       ...values.cast,
-    //     });
-    // }
     setValues({
       ...values,
       loading: false,

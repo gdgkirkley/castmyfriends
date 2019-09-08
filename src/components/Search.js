@@ -66,29 +66,30 @@ const Search = props => {
         .get(),
       firestore
         .collection("shows")
-        .where("tags", "array-contains", lowerSearch)
-        .orderBy("title")
+        .where("title", "==", search)
         .limit(5)
         .get(),
     ]).catch(err => {
       setErr(err.message);
     });
-    result.map(query => {
-      return query.docs.map(doc => {
-        const data = doc.data();
-        const id = doc.id;
-        return results.push({ ...data, id });
+    if (result) {
+      result.map(query => {
+        return query.docs.map(doc => {
+          const data = doc.data();
+          const id = doc.id;
+          return results.push({ ...data, id });
+        });
       });
-    });
-    const finalResult = Array.from(new Set(results.map(show => show.id))).map(
-      id => {
-        return {
-          id: id,
-          ...results.find(show => show.id === id),
-        };
-      }
-    );
-    props.getResults(finalResult, search);
+      const finalResult = Array.from(new Set(results.map(show => show.id))).map(
+        id => {
+          return {
+            id: id,
+            ...results.find(show => show.id === id),
+          };
+        }
+      );
+      props.getResults(finalResult, search);
+    }
   };
 
   return (
