@@ -10,8 +10,15 @@ const CastListStyles = styled.div`
   grid-auto-flow: column;
   padding: 10px;
   text-align: center;
+  @media (max-width: 768px) {
+    grid-auto-flow: row;
+    grid-gap: 8px;
+  }
   & strong {
     color: ${props => props.theme.primary1};
+    &.actor {
+      color: ${props => props.theme.primary5};
+    }
   }
   & span {
     color: ${props => props.theme.accent5};
@@ -40,7 +47,7 @@ const CastList = props => {
               {viewing && castList.length ? (
                 castList[index].cast[char.name] ? (
                   <div>
-                    <strong>
+                    <strong className="actor">
                       {castList[index].cast[char.name].join(", ")}
                     </strong>
                   </div>

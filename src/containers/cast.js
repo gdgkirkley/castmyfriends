@@ -72,7 +72,7 @@ const Cast = () => {
           exact
           path="/show/:id/edit"
           render={props => (
-            <EditShow {...props} user={props.user} show={values.activeShow} />
+            <EditShow {...props} user={values.user} show={values.activeShow} />
           )}
         />
         <Route

@@ -124,6 +124,8 @@ const EditShow = props => {
         tags: sepTags,
         keywords: keywords,
         cast: values.cast,
+        lastUpdate: new Date(),
+        updatedBy: props.user.id,
       })
       .catch(err => {
         setValues({
@@ -158,8 +160,7 @@ const EditShow = props => {
         required
       />
       <label htmlFor="description">Show Description</label>
-      <input
-        type="text"
+      <textarea
         placeholder="Hamlet is about a boy"
         name="description"
         id="description"
