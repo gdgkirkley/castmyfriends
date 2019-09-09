@@ -45,8 +45,14 @@ const WikiContent = styled.div`
   text-align: left;
   align-items: start;
   justify-items: center;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
   & h3 {
-    margin: 0%;
+    margin: 0;
+    @media (max-width: 768px) {
+      margin: 10px 0px;
+    }
   }
 `;
 
