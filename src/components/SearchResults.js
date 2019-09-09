@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { musicLyricCheck } from "../lib/helpers";
 
 const Result = styled.div`
   display: grid;
@@ -65,18 +66,7 @@ const SearchResults = props => {
                     <br />
                   </span>
                 )}
-                {show.music && (
-                  <span>
-                    Music By {show.music}
-                    <br />
-                  </span>
-                )}
-                {show.lyrics && (
-                  <span>
-                    Lyrics By {show.lyrics}
-                    <br />
-                  </span>
-                )}
+                {musicLyricCheck(show.music, show.lyrics)}
                 {show.book && (
                   <span>
                     Book By {show.book}

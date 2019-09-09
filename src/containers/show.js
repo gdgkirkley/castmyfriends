@@ -5,7 +5,7 @@ import { firestore } from "../firebase/firebase.utils";
 import Error from "../components/Error";
 import CastList from "../components/CastList";
 import CastShow from "../components/CastShow";
-import { formatDate } from "../lib/helpers";
+import { formatDate, musicLyricCheck } from "../lib/helpers";
 
 const ShowStyles = styled.div`
   display: grid;
@@ -224,18 +224,7 @@ const Show = props => {
             <br />
           </span>
         )}
-        {show.music && (
-          <span>
-            Music By {show.music}
-            <br />
-          </span>
-        )}
-        {show.lyrics && (
-          <span>
-            Lyrics By {show.lyrics}
-            <br />
-          </span>
-        )}
+        {musicLyricCheck(show.music, show.lyrics)}
         {show.book && (
           <span>
             Book By {show.book}
