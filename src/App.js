@@ -72,17 +72,6 @@ const Inner = styled.div`
   grid-gap: 60px;
 `;
 
-const Head = styled.div`
-  font-family: "Viga", Arial, Helvetica, sans-serif;
-  font-size: ${theme.fontSize.display};
-  color: ${theme.primary5};
-  text-align: center;
-  margin: 40px 0px;
-  & span {
-    color: ${theme.accent5};
-  }
-`;
-
 const GlobalStyle = createGlobalStyle`
     html {
         box-sizing: border-box;
@@ -128,9 +117,6 @@ function App() {
     <ThemeProvider theme={theme}>
       <StyledPage>
         <Inner>
-          <Head>
-            Cast My <span>Show</span>
-          </Head>
           <BrowserRouter>
             <Cast />
           </BrowserRouter>

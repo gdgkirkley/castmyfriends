@@ -6,6 +6,7 @@ import Signin from "../components/Signin";
 import Signup from "../components/Signup";
 import AddShow from "../components/AddShow";
 import EditShow from "../components/EditShow";
+import Header from "./header";
 import Footer from "./footer";
 import SearchPage from "./find";
 import Show from "./show";
@@ -61,6 +62,7 @@ const Cast = () => {
 
   return (
     <CastListContainer>
+      <Header user={values.user} setUserNull={setUserNull} />
       <Switch>
         <Route path="/signin" render={() => <Signin user={values.user} />} />
         <Route path="/signup" component={Signup} />

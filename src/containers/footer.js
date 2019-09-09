@@ -53,11 +53,10 @@ const Footer = props => {
         that lets you cast your friends in your favourite shows!
       </p>
       <FooterNav>
-        <Link to="/">Find a Show</Link>
         {user && user.email ? (
           <>
             <Link to="/addshow">Add a Show</Link>
-            <Link to="/profile">My Casts</Link>
+            <Link to="/profile">My Profile</Link>
             <button onClick={handleSignout}>Sign Out</button>
           </>
         ) : (

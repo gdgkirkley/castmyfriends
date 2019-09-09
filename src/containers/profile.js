@@ -1,13 +1,35 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
 import { formatDate } from "../lib/helpers";
 
+const ProfileStyle = styled.div`
+  display: grid;
+  justify-content: center;
+  text-align: center;
+  & h2 {
+    align-self: flex-start;
+  }
+`;
+
+const CastLink = styled.div`
+  display: grid;
+  border-bottom: 1px solid ${props => props.theme.accent9};
+  margin: 16px 0px;
+  padding: 8px 0px;
+  & h4 {
+    margin: 0;
+  }
+`;
+
 const Profile = props => {
   const [casts, setCasts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!props.user) return;
-
+    setLoading(true);
     async function getCasts() {
       const castRef = await firestore
         .collection(`users/${props.user.id}/casts`)
@@ -20,17 +42,22 @@ const Profile = props => {
         return newUserCasts.push(newCast);
       });
       setCasts(newUserCasts);
+      setLoading(false);
     }
     getCasts();
   }, [props.user]);
 
+  if (!props.user | loading) {
+    return <ProfileStyle>Loading...</ProfileStyle>;
+  }
+
   return (
-    <div>
-      <p>You have casts for:</p>
+    <ProfileStyle>
+      <h2>You have casts for:</h2>
       {casts.length
         ? casts.map(cast => {
             return (
-              <div key={cast.id}>
+              <CastLink key={cast.id}>
                 <Link to={`/show/${cast.show.id}`}>{cast.show.title}</Link>
                 <p>
                   Created on{" "}
@@ -43,11 +70,11 @@ const Profile = props => {
                     minute: "numeric",
                   })}
                 </p>
-              </div>
+              </CastLink>
             );
           })
         : null}
-    </div>
+    </ProfileStyle>
   );
 };
 

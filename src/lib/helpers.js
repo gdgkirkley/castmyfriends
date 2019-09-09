@@ -24,6 +24,9 @@ export const formatDate = (date, dateObj, type) => {
 };
 
 export const musicLyricCheck = (music, lyrics) => {
+  if (!music && !lyrics) {
+    return null;
+  }
   if (music === lyrics) {
     return (
       <span>
