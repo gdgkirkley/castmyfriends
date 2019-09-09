@@ -37,11 +37,17 @@ const CastList = props => {
                   <span>{char.description}</span>
                 </div>
                 {viewing && castList.length ? (
-                  <div>
-                    <strong>
-                      {castList[index].cast[char.name].join(", ")}
-                    </strong>
-                  </div>
+                  castList[index].cast[char.name] ? (
+                    <div>
+                      <strong>
+                        {castList[index].cast[char.name].join(", ")}
+                      </strong>
+                    </div>
+                  ) : (
+                    <div>
+                      <strong>No actor found...</strong>
+                    </div>
+                  )
                 ) : null}
               </CastListStyles>
             );
