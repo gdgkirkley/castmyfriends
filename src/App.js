@@ -65,7 +65,6 @@ const Inner = styled.div`
   max-width: ${props => props.theme.maxWidth};
   min-height: 100vh;
   margin: 0 auto;
-  padding: 2rem;
   display: grid;
   grid-template-columns: 1fr;
   justify-content: center;

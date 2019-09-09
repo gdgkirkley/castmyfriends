@@ -6,6 +6,8 @@ import { auth } from "../firebase/firebase.utils";
 const Head = styled.div`
   display: grid;
   justify-content: center;
+  box-shadow: ${props => props.theme.bs};
+  margin-bottom: 30px;
 `;
 
 const Logo = styled.div`
@@ -25,7 +27,7 @@ const Nav = styled.div`
   grid-auto-flow: column;
   justify-content: space-between;
   align-items: center;
-  margin: 20px 0px;
+  margin: 10px 0px;
   & a {
     display: flex;
     justify-content: center;

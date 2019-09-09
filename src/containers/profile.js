@@ -23,6 +23,10 @@ const CastLink = styled.div`
   }
 `;
 
+const Created = styled.p`
+  font-size: ${props => props.theme.fontSize.information};
+`;
+
 const Profile = props => {
   const [casts, setCasts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -59,7 +63,7 @@ const Profile = props => {
             return (
               <CastLink key={cast.id}>
                 <Link to={`/show/${cast.show.id}`}>{cast.show.title}</Link>
-                <p>
+                <Created>
                   Created on{" "}
                   {formatDate(cast.created.toDate(), {
                     weekday: "long",
@@ -69,7 +73,7 @@ const Profile = props => {
                     hour: "numeric",
                     minute: "numeric",
                   })}
-                </p>
+                </Created>
               </CastLink>
             );
           })
