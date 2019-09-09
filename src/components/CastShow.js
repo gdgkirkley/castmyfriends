@@ -7,7 +7,7 @@ const CastingForm = styled.form`
   align-content: center;
   justify-content: center;
   grid-template-columns: 1fr 1fr;
-  @media (max-width: 700px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
   & fieldset {
@@ -98,6 +98,9 @@ const CastActors = styled.div`
 
 const SaveButton = styled.button`
   grid-column: 1/3;
+  @media (max-width: 768px) {
+    grid-column: 1;
+  }
 `;
 
 const CastShow = props => {
