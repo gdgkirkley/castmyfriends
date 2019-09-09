@@ -7,6 +7,7 @@ import {
   AddCharacterField,
   AddedCharacters,
   Character,
+  Credits,
 } from "./AddShow";
 
 const EditShow = props => {
@@ -18,6 +19,9 @@ const EditShow = props => {
     playwright: show.playwright || "",
     author: show.author || "",
     translator: show.translator || "",
+    book: show.book || "",
+    music: show.music || "",
+    lyrics: show.lyrics || "",
     name: "",
     charDescription: "",
     cast: show.cast || [],
@@ -114,6 +118,9 @@ const EditShow = props => {
         playwright: values.playwright,
         author: values.author,
         translator: values.translator,
+        book: values.book,
+        music: values.music,
+        lyrics: values.lyrics,
         tags: sepTags,
         keywords: keywords,
         cast: values.cast,
@@ -160,34 +167,76 @@ const EditShow = props => {
         onChange={handleChange}
         required
       />
-      <label htmlFor="playwright">Playwright</label>
-      <input
-        type="text"
-        placeholder="William Shakespeare"
-        name="playwright"
-        id="playwright"
-        value={values.playwright}
-        onChange={handleChange}
-      />
-      <label htmlFor="author">Author</label>
-      <input
-        type="text"
-        placeholder="Author"
-        name="author"
-        id="author"
-        value={values.author}
-        onChange={handleChange}
-      />
-      <label htmlFor="translator">Translator</label>
-      <input
-        type="text"
-        placeholder="Translator"
-        name="translator"
-        id="translator"
-        value={values.translator}
-        onChange={handleChange}
-      />
-      <legend>Add Characters</legend>
+      <h2>Credits</h2>
+      <Credits>
+        <label htmlFor="playwright">
+          Playwright
+          <input
+            type="text"
+            placeholder="William Shakespeare"
+            name="playwright"
+            id="playwright"
+            value={values.playwright}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="book">
+          Book
+          <input
+            type="text"
+            placeholder="Wrote the book of the musical"
+            name="book"
+            id="book"
+            value={values.book}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="music">
+          Music
+          <input
+            type="text"
+            placeholder="Wrote the music of the musical"
+            name="music"
+            id="music"
+            value={values.music}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="lyrics">
+          Lyrics
+          <input
+            type="text"
+            placeholder="Wrote the lyrics of the musical"
+            name="lyrics"
+            id="lyrics"
+            value={values.lyrics}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="author">
+          Author
+          <input
+            type="text"
+            placeholder="Wrote the original work"
+            name="author"
+            id="author"
+            value={values.author}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="translator">
+          Translator
+          <input
+            type="text"
+            placeholder="Translated the work from it's original language"
+            name="translator"
+            id="translator"
+            value={values.translator}
+            onChange={handleChange}
+          />
+        </label>
+      </Credits>
+      <h2>Add Characters</h2>
       <AddCharacterField>
         <input
           type="text"

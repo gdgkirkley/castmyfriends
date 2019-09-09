@@ -26,7 +26,7 @@ const CastInfo = styled.div`
 
 const SearchResults = props => {
   const { results } = props;
-  if (!results.length) return null;
+
   return (
     <div>
       {!results.length &&
@@ -47,11 +47,44 @@ const SearchResults = props => {
                 </Link>
               </h4>
               <Credits>
-                {show.playwright && <span>By {show.playwright}</span>}
-                {show.author && <span>Author: {show.author}</span>}
-                {show.translator && <span>Translator: {show.translator}</span>}
+                {show.playwright && (
+                  <span>
+                    By {show.playwright}
+                    <br />
+                  </span>
+                )}
+                {show.author && (
+                  <span>
+                    Author: {show.author}
+                    <br />
+                  </span>
+                )}
+                {show.translator && (
+                  <span>
+                    Translator: {show.translator}
+                    <br />
+                  </span>
+                )}
+                {show.music && (
+                  <span>
+                    Music By {show.music}
+                    <br />
+                  </span>
+                )}
+                {show.lyrics && (
+                  <span>
+                    Lyrics By {show.lyrics}
+                    <br />
+                  </span>
+                )}
+                {show.book && (
+                  <span>
+                    Book By {show.book}
+                    <br />
+                  </span>
+                )}
               </Credits>
-              <CastInfo>Cast: {show.cast.length}</CastInfo>
+              {show.cast && <CastInfo>Cast: {show.cast.length}</CastInfo>}
             </Result>
           );
         })}

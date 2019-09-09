@@ -11,9 +11,11 @@ export const AddShowForm = styled.form`
   textarea {
     padding: 16px 24px;
     margin-bottom: 24px;
+    margin-top: 8px;
     font-size: ${props => props.theme.fontSize.reading};
     border-radius: ${props => props.theme.borderRadius};
     border: 1px solid ${props => props.theme.grey8};
+    width: 100%;
     &:hover {
       border: 1px solid ${props => props.theme.primary7};
     }
@@ -39,9 +41,11 @@ export const AddCharacterField = styled.div`
   align-items: center;
   grid-template-columns: 1fr 1fr 0.2fr;
   grid-gap: 16px;
-  border: 1px solid ${props => props.theme.primary1};
   padding: 16px 24px;
   margin-bottom: 16px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
   & input,
   textarea {
     display: inline-flex;
@@ -62,9 +66,9 @@ export const AddCharacterField = styled.div`
 
 export const AddedCharacters = styled.div`
   display: grid;
-  border: 1px solid ${props => props.theme.primary1};
+  border: 1px solid ${props => props.theme.accent9};
   padding: 16px 24px;
-  margin-bottom: 16px;
+  margin: 16px 0px;
 `;
 
 export const Character = styled.div`
@@ -75,6 +79,17 @@ export const Character = styled.div`
   align-items: center;
 `;
 
+export const Credits = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  grid-gap: 24px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-gap: 0px;
+  }
+`;
+
 const AddShow = props => {
   const [values, setValues] = useState({
     title: "",
@@ -82,6 +97,9 @@ const AddShow = props => {
     playwright: "",
     author: "",
     translator: "",
+    book: "",
+    music: "",
+    lyrics: "",
     name: "",
     charDescription: "",
     cast: [],
@@ -138,6 +156,9 @@ const AddShow = props => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    if (!values.cast.length) {
+      return alert("Cannot create a show with no characters!");
+    }
     setValues({
       ...values,
       loading: true,
@@ -153,6 +174,9 @@ const AddShow = props => {
         playwright: values.playwright,
         author: values.author,
         translator: values.translator,
+        book: values.book,
+        music: values.music,
+        lyrics: values.lyrics,
         tags: sepTags,
         keywords: keywords,
         cast: values.cast,
@@ -202,34 +226,76 @@ const AddShow = props => {
         onChange={handleChange}
         required
       />
-      <label htmlFor="playwright">Playwright</label>
-      <input
-        type="text"
-        placeholder="William Shakespeare"
-        name="playwright"
-        id="playwright"
-        value={values.playwright}
-        onChange={handleChange}
-      />
-      <label htmlFor="author">Author</label>
-      <input
-        type="text"
-        placeholder="Author"
-        name="author"
-        id="author"
-        value={values.author}
-        onChange={handleChange}
-      />
-      <label htmlFor="translator">Translator</label>
-      <input
-        type="text"
-        placeholder="Translator"
-        name="translator"
-        id="translator"
-        value={values.translator}
-        onChange={handleChange}
-      />
-      <legend>Add Characters</legend>
+      <h2>Credits</h2>
+      <Credits>
+        <label htmlFor="playwright">
+          Playwright
+          <input
+            type="text"
+            placeholder="William Shakespeare"
+            name="playwright"
+            id="playwright"
+            value={values.playwright}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="book">
+          Book
+          <input
+            type="text"
+            placeholder="Wrote the book of the musical"
+            name="book"
+            id="book"
+            value={values.book}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="music">
+          Music
+          <input
+            type="text"
+            placeholder="Wrote the music of the musical"
+            name="music"
+            id="music"
+            value={values.music}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="lyrics">
+          Lyrics
+          <input
+            type="text"
+            placeholder="Wrote the lyrics of the musical"
+            name="lyrics"
+            id="lyrics"
+            value={values.lyrics}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="author">
+          Author
+          <input
+            type="text"
+            placeholder="Wrote the original work"
+            name="author"
+            id="author"
+            value={values.author}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="translator">
+          Translator
+          <input
+            type="text"
+            placeholder="Translated the work from it's original language"
+            name="translator"
+            id="translator"
+            value={values.translator}
+            onChange={handleChange}
+          />
+        </label>
+      </Credits>
+      <h2>Add Characters</h2>
       <AddCharacterField>
         <input
           type="text"

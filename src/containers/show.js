@@ -31,6 +31,13 @@ const Title = styled.div`
   font-size: ${props => props.theme.fontSize.title};
 `;
 
+const Credits = styled.h4`
+  font-size: ${props => props.theme.fontSize.emphasis};
+  color: ${props => props.theme.primary2};
+  margin: 16px 0px;
+  padding: 0;
+`;
+
 const Wiki = styled.div`
   display: grid;
   justify-content: center;
@@ -198,7 +205,44 @@ const Show = props => {
   return (
     <ShowStyles>
       <Title>{show.title}</Title>
-      <h4>By {show.playwright}</h4>
+      <Credits>
+        {show.playwright && (
+          <span>
+            By {show.playwright}
+            <br />
+          </span>
+        )}
+        {show.author && (
+          <span>
+            Author: {show.author}
+            <br />
+          </span>
+        )}
+        {show.translator && (
+          <span>
+            Translator: {show.translator}
+            <br />
+          </span>
+        )}
+        {show.music && (
+          <span>
+            Music By {show.music}
+            <br />
+          </span>
+        )}
+        {show.lyrics && (
+          <span>
+            Lyrics By {show.lyrics}
+            <br />
+          </span>
+        )}
+        {show.book && (
+          <span>
+            Book By {show.book}
+            <br />
+          </span>
+        )}
+      </Credits>
       <p>{show.description}</p>
       <div>
         {!casting && userCasts.length ? (
@@ -254,7 +298,12 @@ const Show = props => {
         />
       ) : (
         <>
-          <CastList cast={cast} castList={userCasts} viewing={viewingCasts} />
+          <CastList
+            cast={cast}
+            castList={userCasts}
+            viewing={viewingCasts}
+            showId={show.id}
+          />
         </>
       )}
       <h2>Learn More</h2>

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const CastListStyles = styled.div`
   font-size: ${props => props.theme.fontSize.reading};
@@ -26,33 +27,38 @@ const CastList = props => {
 
   return (
     <>
-      {cast.length
-        ? cast.map(char => {
-            return (
-              <CastListStyles key={char.name}>
-                <div>
-                  <strong>{char.name}</strong>
-                </div>
-                <div>
-                  <span>{char.description}</span>
-                </div>
-                {viewing && castList.length ? (
-                  castList[index].cast[char.name] ? (
-                    <div>
-                      <strong>
-                        {castList[index].cast[char.name].join(", ")}
-                      </strong>
-                    </div>
-                  ) : (
-                    <div>
-                      <strong>No actor found...</strong>
-                    </div>
-                  )
-                ) : null}
-              </CastListStyles>
-            );
-          })
-        : null}
+      {cast.length ? (
+        cast.map(char => {
+          return (
+            <CastListStyles key={char.name}>
+              <div>
+                <strong>{char.name}</strong>
+              </div>
+              <div>
+                <span>{char.description}</span>
+              </div>
+              {viewing && castList.length ? (
+                castList[index].cast[char.name] ? (
+                  <div>
+                    <strong>
+                      {castList[index].cast[char.name].join(", ")}
+                    </strong>
+                  </div>
+                ) : (
+                  <div>
+                    <strong>No actor found...</strong>
+                  </div>
+                )
+              ) : null}
+            </CastListStyles>
+          );
+        })
+      ) : (
+        <p>
+          Hmm... looks like there are no characters to be found. You can help by
+          <Link to={`/show/${props.showId}/edit`}> adding them now!</Link>
+        </p>
+      )}
     </>
   );
 };

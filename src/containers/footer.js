@@ -13,10 +13,12 @@ const FooterStyles = styled.div`
 
 const FooterNav = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
   align-items: center;
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: row;
   }
   & button {
     border: none;
@@ -25,6 +27,14 @@ const FooterNav = styled.div`
     color: ${props => props.theme.primary5};
     padding: 0;
     margin: 0;
+    @media (max-width: 768px) {
+      margin-top: 16px;
+    }
+  }
+  & a {
+    @media (max-width: 768px) {
+      margin-top: 16px;
+    }
   }
 `;
 
