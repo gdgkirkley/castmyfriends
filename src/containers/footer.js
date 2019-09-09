@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { auth } from "../firebase/firebase.utils";
 
 const FooterStyles = styled.div`
@@ -27,6 +27,12 @@ const FooterNav = styled.div`
 
 const Footer = props => {
   const { user } = props;
+
+  const handleSignout = () => {
+    auth.signOut();
+    props.setUserNull();
+  };
+
   return (
     <FooterStyles>
       <p>
@@ -39,7 +45,7 @@ const Footer = props => {
           <>
             <Link to="/addshow">Add a Show</Link>
             <Link to="/profile">My Casts</Link>
-            <button onClick={() => auth.signOut()}>Sign Out</button>
+            <button onClick={handleSignout}>Sign Out</button>
           </>
         ) : (
           <>

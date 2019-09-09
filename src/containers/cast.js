@@ -52,10 +52,17 @@ const Cast = () => {
     });
   };
 
+  const setUserNull = () => {
+    setValues({
+      ...values,
+      user: null,
+    });
+  };
+
   return (
     <CastListContainer>
       <Switch>
-        <Route path="/signin" component={Signin} />
+        <Route path="/signin" render={() => <Signin user={values.user} />} />
         <Route path="/signup" component={Signup} />
         <Route
           path="/addshow"
@@ -80,7 +87,7 @@ const Cast = () => {
         />
         <Route exact path="/" component={SearchPage} />
       </Switch>
-      <Footer user={values.user} />
+      <Footer user={values.user} setUserNull={setUserNull} />
     </CastListContainer>
   );
 };

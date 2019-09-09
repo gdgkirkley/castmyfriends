@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Redirect } from "react-router-dom";
 import { signInWithGoogle, auth } from "../firebase/firebase.utils";
 
 const SignInForm = styled.form`
@@ -35,7 +36,7 @@ const SignInForm = styled.form`
   }
 `;
 
-const Signin = () => {
+const Signin = props => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -61,6 +62,10 @@ const Signin = () => {
         });
       });
   };
+
+  if (props.user && props.user.id) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <SignInForm onSubmit={handleSignIn}>
