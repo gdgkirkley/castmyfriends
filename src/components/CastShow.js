@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
+import Error from "./Error";
 
 const CastingForm = styled.form`
   display: grid;
@@ -96,7 +98,7 @@ const CastActors = styled.div`
   }
 `;
 
-const SaveButton = styled.button`
+const SaveButton = styled.div`
   grid-column: 1/3;
   @media (max-width: 768px) {
     grid-column: 1;
@@ -115,6 +117,7 @@ const CastShow = props => {
 
   const [values, setValues] = useState(characters);
   const [cast, setCast] = useState({});
+  const [err, setErr] = useState("");
 
   useEffect(() => {
     if (props.castList.id) {
@@ -168,25 +171,35 @@ const CastShow = props => {
         .update({
           cast: cast,
           lastUpdate: new Date(),
+        })
+        .catch(err => {
+          setErr(err.message);
         });
       props.getCasts();
       return props.handleCasting();
     }
-    await firestore.collection(`users/${props.user.id}/casts`).add({
-      id: show.id,
-      show: {
+    const res = await firestore
+      .collection(`users/${props.user.id}/casts`)
+      .add({
         id: show.id,
-        title: show.title,
-        description: show.description,
-        playwright: show.playwright,
-        author: show.author,
-        translator: show.translator,
-      },
-      cast: cast,
-      created: new Date(),
-    });
-    props.getCasts();
-    props.handleCasting();
+        show: {
+          id: show.id,
+          title: show.title,
+          description: show.description,
+          playwright: show.playwright,
+          author: show.author,
+          translator: show.translator,
+        },
+        cast: cast,
+        created: new Date(),
+      })
+      .catch(err => {
+        setErr(err.message);
+      });
+    if (res && !err) {
+      props.getCasts();
+      props.handleCasting();
+    }
   };
 
   const handleDragStart = (e, actor, char) => {
@@ -284,8 +297,17 @@ const CastShow = props => {
                 </CharacterCasting>
               );
             })}
-          <SaveButton type="submit" disabled={!Object.keys(cast).length}>
-            Save Cast
+          <SaveButton>
+            {props.user && props.user.id ? (
+              <button type="submit" disabled={!Object.keys(cast).length}>
+                Save Cast
+              </button>
+            ) : (
+              <Link to="/signup">
+                <button type="button">Create an account to save</button>
+              </Link>
+            )}
+            <Error error={err} />
           </SaveButton>
         </fieldset>
       </CastingForm>
