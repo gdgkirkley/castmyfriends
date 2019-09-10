@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { firestore } from "../firebase/firebase.utils";
 import Error from "./Error";
+import { titleCase } from "../lib/helpers";
 
 const SearchForm = styled.form`
   display: grid;
@@ -55,6 +56,7 @@ const Search = props => {
   const handleSubmit = async e => {
     e.preventDefault();
     const lowerSearch = search.toLowerCase();
+    const titleSearch = titleCase(search);
     let results = [];
 
     let result = await Promise.all([
@@ -66,7 +68,7 @@ const Search = props => {
         .get(),
       firestore
         .collection("shows")
-        .where("title", "==", search)
+        .where("title", "==", titleSearch)
         .limit(5)
         .get(),
     ]).catch(err => {

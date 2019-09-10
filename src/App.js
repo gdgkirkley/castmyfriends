@@ -90,6 +90,7 @@ const GlobalStyle = createGlobalStyle`
     }
     svg {
       width: 32px;
+      height: 1%;
       margin: 0px 8px;
     }
     a {
