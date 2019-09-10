@@ -69,6 +69,9 @@ const Inner = styled.div`
   grid-template-columns: 1fr;
   justify-content: center;
   grid-gap: 60px;
+  @media (max-width: 768px) {
+    padding: 2rem;
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
@@ -84,6 +87,10 @@ const GlobalStyle = createGlobalStyle`
         margin: 0;
         font-size: 1.7rem;
         line-height: 1;
+    }
+    svg {
+      width: 32px;
+      margin: 0px 8px;
     }
     a {
         text-decoration: none;

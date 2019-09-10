@@ -58,6 +58,11 @@ const Profile = props => {
   return (
     <ProfileStyle>
       <h2>You have casts for:</h2>
+      {!casts.length ? (
+        <div>
+          You have no casts... <Link to="/">Find a show!</Link>
+        </div>
+      ) : null}
       {casts.length
         ? casts.map(cast => {
             return (

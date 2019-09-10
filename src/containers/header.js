@@ -1,21 +1,29 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { auth } from "../firebase/firebase.utils";
+import CastIcon from "../components/icons/Cast";
 
 const Head = styled.div`
   display: grid;
-  justify-content: center;
-  box-shadow: ${props => props.theme.bs};
-  margin-bottom: 30px;
+  justify-content: space-between;
+  grid-template-columns: 1.5fr 1fr;
+  margin: 30px 0px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    justify-content: center;
+    border-bottom: 1px solid ${props => props.theme.primary10};
+  }
 `;
 
 const Logo = styled.div`
   font-family: "Viga", Arial, Helvetica, sans-serif;
   font-size: ${props => props.theme.fontSize.display};
   color: ${props => props.theme.primary5};
-  text-align: center;
+  text-align: left;
   margin: 10px 0px;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
   & span {
     color: ${props => props.theme.accent5};
   }
@@ -30,12 +38,22 @@ const Nav = styled.div`
   margin: 10px 0px;
   & a {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     cursor: pointer;
     font-size: ${props => props.theme.fontSize.emphasis};
-    width: 192px;
     position: relative;
     padding: 16px;
+    transition: 0.4s linear;
+    @media (max-width: 768px) {
+      justify-content: center;
+    }
+    &:hover {
+      color: ${props => props.theme.primary4};
+    }
+    & svg {
+      width: 24px;
+      transition: 0.4s linear;
+    }
   }
 `;
 
@@ -50,10 +68,9 @@ const Header = props => {
         </Link>
       </Logo>
       <Nav>
-        <Link to="/">Find a Show</Link>
         {user && user.email ? (
           <Link to="/profile">
-            <span>My Casts</span>
+            <CastIcon /> My Casts
           </Link>
         ) : (
           <>
