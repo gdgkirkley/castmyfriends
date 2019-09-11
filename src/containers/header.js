@@ -33,26 +33,38 @@ const Nav = styled.div`
   display: grid;
   grid-auto-columns: 1fr;
   grid-auto-flow: column;
-  justify-content: space-between;
+  justify-items: flex-end;
   align-items: center;
   margin: 10px 0px;
   & a {
+    max-width: 192px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     cursor: pointer;
     font-size: ${props => props.theme.fontSize.emphasis};
+    border: 1px solid ${props => props.theme.primary8};
+    border-radius: ${props => props.theme.borderRadius};
     position: relative;
     padding: 16px;
     transition: 0.4s linear;
+    &.signup {
+      background: ${props => props.theme.accent5};
+      border: none;
+      color: white;
+      &:hover {
+        color: white;
+        background: ${props => props.theme.accent6};
+      }
+    }
     @media (max-width: 768px) {
       justify-content: center;
     }
     &:hover {
-      color: ${props => props.theme.primary4};
+      color: white;
+      background: ${props => props.theme.primary5};
     }
     & svg {
-      width: 24px;
-      transition: 0.4s linear;
+      width: 20px;
     }
   }
 `;
@@ -69,13 +81,13 @@ const Header = props => {
       </Logo>
       <Nav>
         {user && user.email ? (
-          <Link to="/profile">
-            <CastIcon /> My Casts
-          </Link>
+          <Link to="/profile">My Casts</Link>
         ) : (
           <>
             <Link to="/signin">Sign In</Link>
-            <Link to="/signup">Sign Up</Link>
+            <Link to="/signup" className="signup">
+              Sign Up
+            </Link>
           </>
         )}
       </Nav>

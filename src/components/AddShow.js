@@ -154,6 +154,10 @@ const AddShow = props => {
       .split(" ");
   };
 
+  const getFirstLetter = title => {
+    return title.toLowerCase().charAt(0);
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
     if (!values.cast.length) {
@@ -166,6 +170,7 @@ const AddShow = props => {
     const sepTags = separateTags(values.tags);
     const titleSearch = separateTitle(values.title);
     const keywords = titleSearch.concat(sepTags);
+    const firstLetter = getFirstLetter(values.title);
     const newShow = await firestore
       .collection("shows")
       .add({
@@ -179,6 +184,7 @@ const AddShow = props => {
         lyrics: values.lyrics,
         tags: sepTags,
         keywords: keywords,
+        firstLetter: firstLetter,
         cast: values.cast,
         createdAt: new Date(),
         createdBy: props.user.id || 0,
