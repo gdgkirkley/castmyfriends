@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import CastIcon from "../components/icons/Cast";
 
 const Head = styled.div`
   display: grid;

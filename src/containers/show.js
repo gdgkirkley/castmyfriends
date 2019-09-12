@@ -103,10 +103,24 @@ const Show = props => {
 
   useEffect(() => {
     setActiveShow(show);
-  }, [show]);
+  }, [show, setActiveShow]);
 
   useEffect(() => {
     if (!props.user) return;
+    async function getCasts() {
+      const castRef = await firestore
+        .collection(`users/${props.user.id}/casts`)
+        .where("show.id", "==", props.match.params.id)
+        .get();
+      const newUserCasts = [];
+      castRef.docs.map(doc => {
+        const data = doc.data();
+        const id = doc.id;
+        const newCast = { ...data, id };
+        return newUserCasts.push(newCast);
+      });
+      setUserCasts(newUserCasts);
+    }
     getCasts();
   }, [props.user, props.match.params.id]);
 

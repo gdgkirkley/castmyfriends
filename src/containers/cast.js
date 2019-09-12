@@ -47,6 +47,8 @@ const Cast = () => {
   }, []);
 
   const setActiveShow = show => {
+    if (show === values.activeShow) return;
+    console.log("running");
     setValues({
       ...values,
       activeShow: show,
