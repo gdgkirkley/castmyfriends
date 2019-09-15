@@ -24,6 +24,22 @@ const ShowStyles = styled.div`
       background: ${props => props.theme.primary4};
       cursor: pointer;
     }
+    &.back {
+      background: white;
+      border: 1px solid ${props => props.theme.grey5};
+      color: ${props => props.theme.grey5};
+      &:hover {
+        border: 1px solid ${props => props.theme.grey4};
+        color: ${props => props.theme.grey4};
+      }
+    }
+    &.delete {
+      background: white;
+      color: ${props => props.theme.warning3};
+      &:hover {
+        color: ${props => props.theme.warning2};
+      }
+    }
   }
 `;
 
@@ -36,6 +52,12 @@ const Credits = styled.h4`
   color: ${props => props.theme.primary2};
   margin: 16px 0px;
   padding: 0;
+`;
+
+const Buttons = styled.div`
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
 `;
 
 const Wiki = styled.div`
@@ -247,9 +269,13 @@ const Show = props => {
         )}
       </Credits>
       <p>{show.description}</p>
-      <div>
+      <Buttons>
         {!casting && userCasts.length ? (
-          <button type="button" onClick={handleViewingCasts}>
+          <button
+            type="button"
+            className={viewingCasts.viewing && "back"}
+            onClick={handleViewingCasts}
+          >
             {viewingCasts.viewing ? "Go Back" : "My Cast Lists"}
           </button>
         ) : null}
@@ -258,16 +284,24 @@ const Show = props => {
             <button type="button" onClick={handleCastListEdit}>
               {casting ? "Go Back" : "Edit Cast"}
             </button>
-            <button type="button" onClick={handleCastListDelete}>
+            <button
+              type="button"
+              className="delete"
+              onClick={handleCastListDelete}
+            >
               Delete Cast
             </button>
           </>
         ) : (
-          <button type="button" onClick={handleCasting}>
+          <button
+            type="button"
+            className={casting && "back"}
+            onClick={handleCasting}
+          >
             {casting ? "Go Back" : "Cast This Show!"}
           </button>
         )}
-      </div>
+      </Buttons>
       <h4>Characters</h4>
       {viewingCasts.viewing && userCasts.length && (
         <p>

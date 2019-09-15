@@ -35,6 +35,9 @@ const Nav = styled.div`
   justify-items: flex-end;
   align-items: center;
   margin: 10px 0px;
+  @media (max-width: 768px) {
+    justify-items: center;
+  }
   & a {
     max-width: 192px;
     display: flex;

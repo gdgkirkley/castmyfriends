@@ -30,6 +30,7 @@ const SearchField = styled.div`
   width: 100%;
   & button {
     background: ${props => props.theme.primary5};
+    border: none;
     color: white;
     min-width: 64px;
     border-radius: 0px 4px 4px 0px;

@@ -123,6 +123,7 @@ const EditShow = props => {
         lyrics: values.lyrics,
         tags: sepTags,
         keywords: keywords,
+        castSize: values.cast.length,
         cast: values.cast,
         lastUpdate: new Date(),
         updatedBy: props.user.id,

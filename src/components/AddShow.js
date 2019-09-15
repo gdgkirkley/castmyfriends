@@ -185,6 +185,7 @@ const AddShow = props => {
         tags: sepTags,
         keywords: keywords,
         firstLetter: firstLetter,
+        castSize: values.cast.length,
         cast: values.cast,
         createdAt: new Date(),
         createdBy: props.user.id || 0,
