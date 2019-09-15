@@ -35,9 +35,11 @@ const ShowStyles = styled.div`
     }
     &.delete {
       background: white;
+      border: 1px solid ${props => props.theme.warning3};
       color: ${props => props.theme.warning3};
       &:hover {
         color: ${props => props.theme.warning2};
+        border: 1px solid ${props => props.theme.warning2};
       }
     }
   }

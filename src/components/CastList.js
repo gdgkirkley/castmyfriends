@@ -13,6 +13,9 @@ const CastListStyles = styled.div`
   @media (max-width: 768px) {
     grid-auto-flow: row;
     grid-gap: 8px;
+    &.description {
+      display: none;
+    }
   }
   & strong {
     color: ${props => props.theme.primary1};
@@ -41,9 +44,11 @@ const CastList = props => {
               <div>
                 <strong>{char.name}</strong>
               </div>
-              <div>
-                <span>{char.description}</span>
-              </div>
+              {!viewing && (
+                <div>
+                  <span>{char.description}</span>
+                </div>
+              )}
               {viewing && castList.length ? (
                 castList[index].cast[char.name] ? (
                   <div>
