@@ -1,6 +1,6 @@
 # CAST MY SHOW
 
-Cast My Show is a small side project for quickly and easily casting theatre productions using a drag and drop interface. It lets users log in, search for a show from the database, add a new show if it doesn't exist already, cast a show, and save their casts!
+Cast My Show is a small side project I created for quickly and easily casting theatre productions using a drag and drop interface. It lets users create accounts, search for a show (or, add a new show if it doesn't exist already), cast it, and save their casts for later!
 
 ![Screenshot of castmyshow.com](./public/screenshot.gif)
 
@@ -21,3 +21,7 @@ npm start
 - ReactJS
 - Styled Components
 - Google Firebase
+
+## Contributing
+
+I'm not working on this project any longer, but if you'd like to contribute please create a PR!

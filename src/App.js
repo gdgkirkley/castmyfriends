@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import Cast from "./containers/cast";
 
-const theme = {
+export const theme = {
   primary1: "#170647",
   primary2: "#200A5C",
   primary3: "#341782",
@@ -57,12 +57,12 @@ const theme = {
 
 const StyledPage = styled.div`
   background: white;
-  color: ${props => props.theme.black};
+  color: ${(props) => props.theme.black};
   font-family: "Roboto", Arial, Helvetica, sans-serif;
 `;
 
 const Inner = styled.div`
-  max-width: ${props => props.theme.maxWidth};
+  max-width: ${(props) => props.theme.maxWidth};
   min-height: 100vh;
   margin: 0 auto;
   display: grid;
@@ -95,22 +95,22 @@ const GlobalStyle = createGlobalStyle`
     }
     a {
         text-decoration: none;
-        color: ${props => props.theme.primary5};
+        color: ${(props) => props.theme.primary5};
         &:hover{
         cursor: pointer;
-        color: ${props => props.theme.primary4};
+        color: ${(props) => props.theme.primary4};
         }
         &:visited {
-          color: ${props => props.theme.primary5};  
+          color: ${(props) => props.theme.primary5};
         }
         &.btn {
           padding: 10px 20px;
           margin: 2rem 0rem;
-          color: ${props => props.theme.grey};
-          background: ${props => props.theme.lightgrey};
+          color: ${(props) => props.theme.grey};
+          background: ${(props) => props.theme.lightgrey};
           &:hover {
-            background: ${props => props.theme.grey};
-            color: ${props => props.theme.lightgrey};
+            background: ${(props) => props.theme.grey};
+            color: ${(props) => props.theme.lightgrey};
           }
         }
     }

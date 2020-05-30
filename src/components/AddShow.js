@@ -6,45 +6,49 @@ import Error from "./Error";
 
 export const AddShowForm = styled.form`
   display: grid;
-  background: ${props => (props.loading ? "grey" : "none")};
+  background: ${(props) => (props.loading ? "grey" : "none")};
   & input,
   textarea {
     padding: 16px 24px;
     margin-bottom: 24px;
     margin-top: 8px;
-    font-size: ${props => props.theme.fontSize.reading};
-    border-radius: ${props => props.theme.borderRadius};
-    border: 1px solid ${props => props.theme.grey8};
+    font-size: ${(props) => props.theme.fontSize.reading};
+    border-radius: ${(props) => props.theme.borderRadius};
+    border: 1px solid ${(props) => props.theme.grey8};
     width: 100%;
     &:hover {
-      border: 1px solid ${props => props.theme.primary7};
+      border: 1px solid ${(props) => props.theme.primary7};
     }
   }
   & label {
-    font-size: ${props => props.theme.fontSize.emphasis};
+    font-size: ${(props) => props.theme.fontSize.emphasis};
     margin: 8px 0px;
   }
   & button {
-    background: ${props => props.theme.primary5};
+    background: ${(props) => props.theme.primary5};
     color: white;
     border: none;
     padding: 16px 24px;
     &:hover {
       cursor: pointer;
-      background: ${props => props.theme.primary4};
+      background: ${(props) => props.theme.primary4};
     }
   }
 `;
 
 export const AddCharacterField = styled.div`
   display: grid;
+  justify-content: center;
   align-items: center;
-  grid-template-columns: 1fr 1fr 0.2fr;
+  grid-template-columns: 1fr;
   grid-gap: 16px;
-  padding: 16px 24px;
+  padding: 16px 0px;
   margin-bottom: 16px;
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+  }
+  & div {
+    display: grid;
   }
   & input,
   textarea {
@@ -57,16 +61,16 @@ export const AddCharacterField = styled.div`
     resize: vertical;
   }
   & legend {
-    background-color: ${props => props.theme.primary5};
+    background-color: ${(props) => props.theme.primary5};
     color: #fff;
     padding: 4px 8px;
-    border-radius: ${props => props.theme.borderRadius};
+    border-radius: ${(props) => props.theme.borderRadius};
   }
 `;
 
 export const AddedCharacters = styled.div`
   display: grid;
-  border: 1px solid ${props => props.theme.accent9};
+  border: 1px solid ${(props) => props.theme.accent9};
   padding: 16px 24px;
   margin: 16px 0px;
 `;
@@ -90,7 +94,7 @@ export const Credits = styled.div`
   }
 `;
 
-const AddShow = props => {
+const AddShow = (props) => {
   const [values, setValues] = useState({
     title: "",
     description: "",
@@ -110,7 +114,7 @@ const AddShow = props => {
     newShowId: "",
   });
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
@@ -118,7 +122,7 @@ const AddShow = props => {
     });
   };
 
-  const handleAddCharacter = e => {
+  const handleAddCharacter = (e) => {
     e.preventDefault();
     const newChar = { name: values.name, description: values.charDescription };
     setValues({
@@ -131,7 +135,7 @@ const AddShow = props => {
 
   const handleRemoveCharacter = (e, name) => {
     e.preventDefault();
-    const newChars = values.cast.filter(char => {
+    const newChars = values.cast.filter((char) => {
       return char.name !== name;
     });
     setValues({
@@ -140,25 +144,22 @@ const AddShow = props => {
     });
   };
 
-  const separateTags = tags => {
-    return tags
-      .toLowerCase()
-      .replace(" ", "")
-      .split(",");
+  const separateTags = (tags) => {
+    return tags.toLowerCase().replace(" ", "").split(",");
   };
 
-  const separateTitle = title => {
+  const separateTitle = (title) => {
     return title
       .toLowerCase()
       .replace(/[^a-zA-Z ]/g, "")
       .split(" ");
   };
 
-  const getFirstLetter = title => {
+  const getFirstLetter = (title) => {
     return title.toLowerCase().charAt(0);
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!values.cast.length) {
       return alert("Cannot create a show with no characters!");
@@ -190,7 +191,7 @@ const AddShow = props => {
         createdAt: new Date(),
         createdBy: props.user.id || 0,
       })
-      .catch(err => {
+      .catch((err) => {
         setValues({
           ...values,
           error: err,
@@ -210,7 +211,12 @@ const AddShow = props => {
   }
 
   return (
-    <AddShowForm onSubmit={handleSubmit} loading={values.loading} method="post">
+    <AddShowForm
+      role="form"
+      onSubmit={handleSubmit}
+      loading={values.loading ? values.loading : undefined}
+      method="post"
+    >
       <h2>Add a New Show</h2>
       <Error error={values.error} />
       <label htmlFor="title">Title</label>
@@ -304,41 +310,51 @@ const AddShow = props => {
       </Credits>
       <h2>Add Characters</h2>
       <AddCharacterField>
-        <input
-          type="text"
-          placeholder="Character"
-          name="name"
-          id="name"
-          value={values.name}
-          onChange={handleChange}
-        />
-        <textarea
-          placeholder="Character Description"
-          name="charDescription"
-          id="charDescription"
-          value={values.charDescription}
-          onChange={handleChange}
-        />
+        <div>
+          <label htmlFor="name">Character Name</label>
+          <input
+            type="text"
+            placeholder="Character"
+            name="name"
+            id="name"
+            value={values.name}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="charDescription">Character Description</label>
+          <textarea
+            placeholder="Character Description"
+            name="charDescription"
+            id="charDescription"
+            value={values.charDescription}
+            onChange={handleChange}
+          />
+        </div>
         <button type="button" onClick={handleAddCharacter}>
           Add
         </button>
       </AddCharacterField>
       <legend>Added Characters</legend>
       <AddedCharacters>
-        {values.cast.map((char, index) => {
-          return (
-            <Character key={`${char.name}-${index}`}>
-              <p>{char.name}</p>
-              <p>{char.description}</p>
-              <button
-                type="button"
-                onClick={e => handleRemoveCharacter(e, char.name)}
-              >
-                X
-              </button>
-            </Character>
-          );
-        })}
+        {values.cast.length ? (
+          values.cast.map((char, index) => {
+            return (
+              <Character key={`${char.name}-${index}`}>
+                <p>{char.name}</p>
+                <p>{char.description}</p>
+                <button
+                  type="button"
+                  onClick={(e) => handleRemoveCharacter(e, char.name)}
+                >
+                  X
+                </button>
+              </Character>
+            );
+          })
+        ) : (
+          <p>Nothing to display! Add a character above.</p>
+        )}
       </AddedCharacters>
       <label htmlFor="tags">Show Tags</label>
       <input
