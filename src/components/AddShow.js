@@ -331,12 +331,16 @@ const AddShow = (props) => {
             onChange={handleChange}
           />
         </div>
-        <button type="button" onClick={handleAddCharacter}>
+        <button
+          type="button"
+          onClick={handleAddCharacter}
+          data-testid="addCharacter"
+        >
           Add
         </button>
       </AddCharacterField>
       <legend>Added Characters</legend>
-      <AddedCharacters>
+      <AddedCharacters data-testid="characterList">
         {values.cast.length ? (
           values.cast.map((char, index) => {
             return (
@@ -366,7 +370,9 @@ const AddShow = (props) => {
         onChange={handleChange}
         required
       />
-      <button type="submit">Add{values.loading && "ing"} Show</button>
+      <button type="submit" disabled={values.loading}>
+        Add{values.loading && "ing"} Show
+      </button>
     </AddShowForm>
   );
 };

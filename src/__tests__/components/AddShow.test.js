@@ -1,8 +1,22 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { mockFirebase } from "firestore-jest-mock";
+const {
+  mockCollection,
+  mockAdd,
+} = require("firestore-jest-mock/mocks/firestore");
 import { ThemeProvider } from "styled-components";
 import AddShow from "../../components/AddShow";
+import { firestore } from "../../firebase/firebase.utils";
 import { theme } from "../../App";
+
+mockFirebase({
+  database: {
+    users: [{ id: "abc123", name: "Test" }],
+    shows: [{ id: "123abc", title: "Midsummer" }],
+  },
+});
 
 beforeEach(() => {
   render(
@@ -10,6 +24,10 @@ beforeEach(() => {
       <AddShow />
     </ThemeProvider>
   );
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 test("<AddShow /> renders without issues", () => {
@@ -35,6 +53,9 @@ test("<AddShow /> renders without issues", () => {
   screen.getByLabelText(/tags/i);
 
   screen.getByText(/add show/i);
+
+  screen.getByTestId("addCharacter");
+  screen.getByTestId("characterList");
 });
 
 test("<AddShow /> inputs accept values", () => {
@@ -48,7 +69,46 @@ test("<AddShow /> inputs accept values", () => {
 });
 
 test("<AddShow /> add character adds to display", () => {
+  const characterList = screen.getByTestId("characterList");
+  expect(characterList.childElementCount).toBe(1);
+  expect(characterList.textContent).toBe(
+    "Nothing to display! Add a character above."
+  );
+
   const nameInput = screen.getByLabelText(/name/i);
   fireEvent.change(nameInput, { target: { value: "Nick Bottom" } });
   expect(nameInput.value).toBe("Nick Bottom");
+
+  const descriptionInput = screen.getByLabelText(/character description/i);
+  fireEvent.change(descriptionInput, { target: { value: "A weaver" } });
+  expect(descriptionInput.value).toBe("A weaver");
+
+  const button = screen.getByTestId("addCharacter");
+  fireEvent.click(button);
+
+  expect(characterList.childElementCount).toBe(1);
+  expect(characterList.textContent).toContain("Nick Bottom");
+  expect(characterList.textContent).toContain("A weaver");
+
+  const removeButton = screen.getByText("X");
+  fireEvent.click(removeButton);
+  expect(characterList.childElementCount).toBe(1);
+  expect(characterList.textContent).toBe(
+    "Nothing to display! Add a character above."
+  );
+});
+
+test("<AddShow /> submits", () => {
+  const form = screen.getByRole("form");
+  const submit = screen.getByText(/add show/i);
+
+  fireEvent.click(submit);
+
+  expect(submit).toBeDisabled();
+  expect(submit.textContent).toBe("Adding Show");
+
+  expect(mockCollection).toHaveBeenCalled();
+  expect(mockCollection).toHaveBeenCalledTimes(1);
+  expect(mockAdd).toHaveBeenCalled();
+  expect(mockAdd).toHaveBeenCalledTimes(1);
 });
